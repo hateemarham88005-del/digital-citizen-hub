@@ -12,9 +12,6 @@ body {background-color: #f7f9fc;}
 h1, h2, h3 {color: #003566; font-weight: 700;}
 .card {background-color: white; border-radius: 12px; padding: 20px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 15px;}
-.status-resolved {color: green; font-weight: bold;}
-.status-pending {color: orange; font-weight: bold;}
-.status-urgent {color: red; font-weight: bold;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -121,11 +118,8 @@ elif page == text[lang]["submit"]:
         if submitted and name and description:
             tracking_id = random.randint(1000,9999)
             assigned_dept = department_mapping[category]
-            # Random priority
             priority = random.choices(priority_levels, weights=[0.5,0.3,0.2])[0]
-            # Initial status
             status = "Pending" if lang=="English" else "زیرِ کارروائی"
-            # Add to session
             st.session_state.complaints.append({
                 "ID": tracking_id,
                 "Name": name,
@@ -151,11 +145,9 @@ elif page == text[lang]["track"]:
             except ValueError:
                 found = None
             if found:
-                # Status and priority
                 status_display = status_badges.get(found["Status"], found["Status"]) if lang=="English" else status_badges_urdu.get(found["Status"], found["Status"])
                 priority_display = priority_badges.get(found["Priority"], found["Priority"]) if lang=="English" else priority_badges_urdu.get(found["Priority"], found["Priority"])
                 st.markdown(f"**Complaint ID:** {found['ID']}<br>Status: {status_display}<br>Department: {found['Department']}<br>Priority: {priority_display}", unsafe_allow_html=True)
-                # Mark resolved button
                 if st.button(text[lang]["resolved_btn"]):
                     found["Status"] = "Resolved" if lang=="English" else "حل شدہ"
                     st.success("✅ Status updated!" if lang=="English" else "✅ حالت اپڈیٹ ہو گئی!")
@@ -171,13 +163,18 @@ elif page == text[lang]["dashboard"]:
     if st.session_state.complaints:
         df = pd.DataFrame(st.session_state.complaints)
         df_display = df.copy()
-        # Display mapping for dashboard
-        df_display["Priority"] = df_display["Priority"].apply(lambda x: priority_badges.get(x, x) if lang=="English" else priority_badges_urdu.get(x, x))
-        df_display["Status"] = df_display["Status"].apply(lambda x: status_badges.get(x, x) if lang=="English" else status_badges_urdu.get(x, x))
+        df_display["Priority"] = df_display["Priority"].apply(lambda x: priority_badges.get(x,x) if lang=="English" else priority_badges_urdu.get(x,x))
+        df_display["Status"] = df_display["Status"].apply(lambda x: status_badges.get(x,x) if lang=="English" else status_badges_urdu.get(x,x))
         st.write(df_display.to_html(escape=False, index=False), unsafe_allow_html=True)
-        # Metrics
         total = len(df)
         resolved = len([c for c in df["Status"] if c=="Resolved" or c=="حل شدہ"])
         pending = total - resolved
         col1, col2, col3 = st.columns(3)
-        col1.metric("Total Complaints" if lang=="
+        col1.metric("Total Complaints" if lang=="English" else "کل شکایات", total)
+        col2.metric("Resolved" if lang=="English" else "حل شدہ", resolved)
+        col3.metric("Pending" if lang=="English" else "زیرِ کارروائی", pending)
+    else:
+        st.info("No complaints submitted yet." if lang=="English" else "ابھی کوئی شکایت درج نہیں ہوئی۔")
+
+st.write("---")
+st.markdown(f"**{text[lang]['footer']}**")
