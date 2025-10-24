@@ -1,7 +1,6 @@
 import streamlit as st
 import pandas as pd
 import random
-import plotly.express as px
 
 # --- Page config ---
 st.set_page_config(page_title="Digital Citizen Hub", page_icon="🌐", layout="wide")
@@ -44,7 +43,8 @@ text = {
         "track_btn": "Check Status",
         "dashboard_title": "Transparency Dashboard",
         "dashboard_desc": "Overview of complaints in the system.",
-        "footer": "Empowering governance through AI and transparency 🇵🇰"
+        "footer": "Empowering governance through AI and transparency 🇵🇰",
+        "resolved_btn": "Mark as Resolved"
     },
     "اردو": {
         "home": "ہوم",
@@ -66,7 +66,8 @@ text = {
         "track_btn": "حالت چیک کریں",
         "dashboard_title": "شفافیت کا ڈیش بورڈ",
         "dashboard_desc": "سسٹم میں شکایات کا جائزہ۔",
-        "footer": "مصنوعی ذہانت اور شفافیت کے ذریعے گورننس کو مضبوط بنانا 🇵🇰"
+        "footer": "مصنوعی ذہانت اور شفافیت کے ذریعے گورننس کو مضبوط بنانا 🇵🇰",
+        "resolved_btn": "حل شدہ نشان زد کریں"
     }
 }
 
@@ -84,7 +85,6 @@ department_mapping = {
     "Water": "Water Board",
     "Health": "Health Dept",
     "Roads": "Public Works",
-    # Urdu
     "بجلی": "قیسکوا",
     "پانی": "واٹر بورڈ",
     "صحت": "ہیلتھ ڈیپارٹمنٹ",
@@ -138,11 +138,7 @@ elif page == text[lang]["track"]:
     complaint_id = st.text_input(text[lang]["track_input"])
     if st.button(text[lang]["track_btn"]):
         if complaint_id.strip():
-            found = None
-            for c in st.session_state.complaints:
-                if str(c["ID"]) == complaint_id.strip():
-                    found = c
-                    break
+            found = next((c for c in st.session_state.complaints if str(c["ID"]) == complaint_id.strip()), None)
             if found:
                 status_display = "✅ Resolved" if found["Status"]=="Resolved" else "🕓 Pending" if lang=="English" else "🕓 زیرِ کارروائی"
                 priority_display = priority_colors[found["Priority"]] if lang=="English" else priority_colors_urdu[found["Priority"]]
@@ -158,7 +154,7 @@ elif page == text[lang]["dashboard"]:
     st.write(text[lang]["dashboard_desc"])
     if st.session_state.complaints:
         df = pd.DataFrame(st.session_state.complaints)
-        # Display priority with colors
+        # Priority display
         df_display = df.copy()
         df_display["Priority"] = df_display["Priority"].apply(lambda x: priority_colors[x] if lang=="English" else priority_colors_urdu[x])
         st.table(df_display)
@@ -170,18 +166,4 @@ elif page == text[lang]["dashboard"]:
         col1.metric("Total Complaints" if lang=="English" else "کل شکایات", total)
         col2.metric("Resolved" if lang=="English" else "حل شدہ", resolved)
         col3.metric("Pending" if lang=="English" else "زیرِ کارروائی", pending)
-        # --- Charts ---
-        # Complaints by Department
-        fig1 = px.pie(df, names="Department", title="Complaints by Department" if lang=="English" else "محکمہ کے لحاظ سے شکایات")
-        st.plotly_chart(fig1, use_container_width=True)
-        # Complaints by Priority
-        fig2 = px.bar(df, x="Priority", y=[1]*len(df), color="Priority", title="Complaints by Priority" if lang=="English" else "ترجیحات کے لحاظ سے شکایات")
-        st.plotly_chart(fig2, use_container_width=True)
-        # --- Simulated AI insights ---
-        top_cat = df["Category"].value_counts().idxmax()
-        st.info(f"🚨 Most complaints in: {top_cat}" if lang=="English" else f"🚨 سب سے زیادہ شکایات: {top_cat}")
-    else:
-        st.info("No complaints submitted yet." if lang=="English" else "ابھی کوئی شکایت درج نہیں ہوئی۔")
-
-st.write("---")
-st.markdown(f"**{text[lang]['footer']}**")
+        #
