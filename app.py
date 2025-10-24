@@ -152,7 +152,7 @@ elif page == text[lang]["track"]:
                     found["Status"] = "Resolved" if lang=="English" else "حل شدہ"
                     st.success("✅ Status updated!" if lang=="English" else "✅ حالت اپڈیٹ ہو گئی!")
             else:
-                st.warning("❌ Complaint not found!" if lang=="English" else "❌ شکایت موجود نہیں!")
+                st.warning("❌ Complaint is pending!" if lang=="English" else "❌ شکایت موجود نہیں!")
         else:
             st.warning("⚠️ Enter a valid ID!" if lang=="English" else "⚠️ درست آئی ڈی درج کریں!")
 
