@@ -1,94 +1,121 @@
 import streamlit as st
+import random
 
-# Page configuration
-st.set_page_config(
-    page_title="Digital Citizen Hub",
-    page_icon="🌐",
-    layout="wide",
-)
+# --- PAGE CONFIG ---
+st.set_page_config(page_title="Digital Citizen Hub", page_icon="🌐", layout="wide")
 
-# --- Custom CSS for Styling ---
+# --- CUSTOM CSS ---
 st.markdown("""
-    <style>
-    .main-title {
-        font-size: 38px;
-        font-weight: 700;
-        color: #003566;
-        text-align: center;
-        margin-bottom: 0.3em;
-    }
-    .subtitle {
-        font-size: 18px;
-        color: #555;
-        text-align: center;
-        margin-bottom: 2em;
-    }
-    .feature-card {
-        background-color: #f9f9f9;
-        border-radius: 15px;
-        padding: 20px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-        transition: all 0.2s ease;
-    }
-    .feature-card:hover {
-        background-color: #eef3fa;
-    }
-    </style>
+<style>
+.main-title {
+    font-size: 36px; font-weight: 700; color: #003566; text-align: center; margin-bottom: 5px;
+}
+.subtitle {
+    text-align: center; color: #555; font-size: 18px; margin-bottom: 25px;
+}
+.card {
+    background-color: #f9f9f9; border-radius: 12px; padding: 20px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px;
+}
+</style>
 """, unsafe_allow_html=True)
 
-# --- Language selector ---
-lang = st.sidebar.radio("🌐 Choose Language / زبان منتخب کریں", ("English", "اردو"))
+# --- LANGUAGE SELECTOR ---
+lang = st.sidebar.radio("🌐 Choose Language / زبان منتخب کریں", ["English", "اردو"])
 
-# --- Text dictionary ---
+# --- PAGE SELECTOR ---
+page = st.sidebar.radio(
+    "📑 Navigate",
+    ["Submit Complaint" if lang == "English" else "شکایت درج کریں",
+     "Track Complaint" if lang == "English" else "شکایت ٹریک کریں",
+     "Dashboard" if lang == "English" else "ڈیش بورڈ"]
+)
+
+# --- TRANSLATION DATA ---
 text = {
     "English": {
         "title": "Digital Citizen Hub",
-        "subtitle": "An AI-powered GovTech platform transforming governance in Balochistan.",
-        "about": "Digital Citizen Hub leverages Artificial Intelligence to make public services transparent, efficient, and citizen-focused. From complaint automation to policy intelligence — everything in one ecosystem.",
-        "sections": {
-            "Complaint": ("Citizen Service Automation & Complaint Redressal", 
-                          "Citizens can submit complaints through web or mobile (text, voice, or image). AI categorizes and routes them automatically for faster resolution."),
-            "Transparency": ("Transparency & Accountability Dashboard", 
-                             "A public dashboard shows complaint data, resolution times, and departmental performance to ensure accountability."),
-            "Policy": ("AI-Driven Policy Recommendations", 
-                       "AI analyzes citizen feedback and government data to identify policy gaps and recommend improvements."),
-            "Fraud": ("Fraud Detection in Public Finance", 
-                      "Machine learning models detect anomalies in government transactions to ensure financial integrity.")
-        },
+        "subtitle": "AI-powered platform transforming governance in Balochistan.",
+        "submit_title": "Submit a Complaint",
+        "submit_desc": "Fill out the form below to report an issue. AI will categorize and route your complaint automatically.",
+        "name": "Full Name",
+        "category": "Complaint Type",
+        "description": "Describe your issue",
+        "submit_btn": "Submit Complaint",
+        "success": "✅ Your complaint has been submitted! Tracking ID:",
+        "track_title": "Track Your Complaint",
+        "track_input": "Enter your Complaint ID",
+        "track_btn": "Check Status",
+        "status_result": "Your complaint is currently being processed by the relevant department.",
+        "dashboard_title": "Transparency Dashboard",
+        "dashboard_desc": "Real-time summary of complaints and resolutions.",
         "footer": "Empowering governance through AI and transparency 🇵🇰"
     },
     "اردو": {
         "title": "ڈیجیٹل سٹیزن حب",
         "subtitle": "بلوچستان میں گورننس کو بہتر بنانے کے لیے مصنوعی ذہانت سے چلنے والا پلیٹ فارم۔",
-        "about": "ڈیجیٹل سٹیزن حب عوامی خدمات کو شفاف، مؤثر اور شہریوں کے لیے آسان بنانے کے لیے مصنوعی ذہانت استعمال کرتا ہے۔ شکایات کے خودکار نظام سے لے کر پالیسی تجاویز تک — سب کچھ ایک ہی پلیٹ فارم پر۔",
-        "sections": {
-            "Complaint": ("شہری خدمات اور شکایات کا خودکار نظام", 
-                          "شہری ویب یا موبائل کے ذریعے (متن، آواز یا تصویر) شکایات درج کر سکتے ہیں۔ مصنوعی ذہانت ان کو خودکار طور پر متعلقہ محکمے کو بھیجتی ہے۔"),
-            "Transparency": ("شفافیت اور احتساب کا ڈیش بورڈ", 
-                             "ایک عوامی ڈیش بورڈ شکایات، حل کے وقت اور محکموں کی کارکردگی کے اعداد و شمار ظاہر کرتا ہے تاکہ احتساب یقینی بنایا جا سکے۔"),
-            "Policy": ("پالیسی کے لیے مصنوعی ذہانت پر مبنی تجاویز", 
-                       "مصنوعی ذہانت شہری آراء اور سرکاری ڈیٹا کا تجزیہ کر کے پالیسی میں موجود خامیوں اور بہتری کے مواقع کی نشاندہی کرتی ہے۔"),
-            "Fraud": ("عوامی مالیات میں دھوکہ دہی کی نشاندہی", 
-                      "مشین لرننگ ماڈلز سرکاری مالیاتی لین دین میں بے ضابطگیوں کا پتہ لگاتے ہیں تاکہ مالی شفافیت یقینی بنائی جا سکے۔")
-        },
+        "submit_title": "شکایت درج کریں",
+        "submit_desc": "مسئلہ رپورٹ کرنے کے لیے نیچے دیا گیا فارم پُر کریں۔ مصنوعی ذہانت آپ کی شکایت کو خودکار طور پر درجہ بند کرے گی۔",
+        "name": "نام",
+        "category": "شکایت کی قسم",
+        "description": "مسئلہ بیان کریں",
+        "submit_btn": "شکایت جمع کریں",
+        "success": "✅ آپ کی شکایت موصول ہو گئی ہے! ٹریکنگ آئی ڈی:",
+        "track_title": "شکایت ٹریک کریں",
+        "track_input": "اپنی شکایت کی آئی ڈی درج کریں",
+        "track_btn": "حالت چیک کریں",
+        "status_result": "آپ کی شکایت متعلقہ محکمے میں زیرِ کارروائی ہے۔",
+        "dashboard_title": "شفافیت کا ڈیش بورڈ",
+        "dashboard_desc": "شکایات اور ان کے حل کی حقیقی وقت کی رپورٹ۔",
         "footer": "مصنوعی ذہانت اور شفافیت کے ذریعے گورننس کو مضبوط بنانا 🇵🇰"
     }
 }
 
-# --- Page content ---
+# --- PAGE CONTENT ---
 st.markdown(f"<h1 class='main-title'>{text[lang]['title']}</h1>", unsafe_allow_html=True)
 st.markdown(f"<p class='subtitle'>{text[lang]['subtitle']}</p>", unsafe_allow_html=True)
 st.write("---")
 
-# About section
-st.info(text[lang]["about"])
+# 📝 Submit Complaint Page
+if page.startswith("Submit") or page.startswith("شکایت"):
+    st.header(text[lang]["submit_title"])
+    st.write(text[lang]["submit_desc"])
+    st.write("")
 
-# --- Features Grid ---
-cols = st.columns(2)
-for i, (key, (title, desc)) in enumerate(text[lang]["sections"].items()):
-    with cols[i % 2]:
-        st.markdown(f"<div class='feature-card'><h4>{title}</h4><p>{desc}</p></div>", unsafe_allow_html=True)
-        st.write("")
+    with st.form("complaint_form"):
+        name = st.text_input(text[lang]["name"])
+        category = st.selectbox(
+            text[lang]["category"],
+            ["Electricity", "Water", "Health", "Education", "Roads"] if lang == "English"
+            else ["بجلی", "پانی", "صحت", "تعلیم", "سڑکیں"]
+        )
+        description = st.text_area(text[lang]["description"], height=120)
+        submitted = st.form_submit_button(text[lang]["submit_btn"])
 
-st.write("---")
-st.markdown(f"### {text[lang]['footer']}")
+        if submitted and name and description:
+            complaint_id = random.randint(1000, 9999)
+            st.success(f"{text[lang]['success']} #{complaint_id}")
+        elif submitted:
+            st.warning("⚠️ Please fill in all fields!" if lang == "English" else "⚠️ تمام خانے پُر کریں!")
+
+# 🔍 Track Complaint Page
+elif page.startswith("Track") or page.startswith("ٹریک"):
+    st.header(text[lang]["track_title"])
+    complaint_id = st.text_input(text[lang]["track_input"])
+    if st.button(text[lang]["track_btn"]):
+        if complaint_id.strip():
+            st.info(f"🕓 {text[lang]['status_result']}")
+        else:
+            st.warning("⚠️ Enter a valid ID!" if lang == "English" else "⚠️ درست آئی ڈی درج کریں!")
+
+# 📊 Dashboard Page
+else:
+    st.header(text[lang]["dashboard_title"])
+    st.write(text[lang]["dashboard_desc"])
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Total Complaints" if lang == "English" else "کل شکایات", "1,245")
+    col2.metric("Resolved" if lang == "English" else "حل شدہ", "982")
+    col3.metric("Pending" if lang == "English" else "زیرِ کارروائی", "263")
+
+    st.write("---")
+    st.markdown(f"### {text[lang]['footer']}")
