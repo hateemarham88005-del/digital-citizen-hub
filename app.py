@@ -1,115 +1,94 @@
 import streamlit as st
-import pandas as pd
-import random
-import datetime
 
-# Page setup
-st.set_page_config(page_title="Digital Citizen Hub", page_icon="🏛️", layout="wide")
+# Page configuration
+st.set_page_config(
+    page_title="Digital Citizen Hub",
+    page_icon="🌐",
+    layout="wide",
+)
 
-# Sidebar Navigation
-st.sidebar.title("🏛️ Digital Citizen Hub")
-menu = st.sidebar.radio("Navigate", ["🏠 Home", "📨 Submit Complaint", "🔎 Track Complaint", "📊 Dashboard", "ℹ️ About"])
-
-# --- Home Page ---
-if menu == "🏠 Home":
-    st.title("Welcome to Digital Citizen Hub")
-    st.subheader("AI-Powered Governance for Balochistan 🇵🇰")
-    st.write("""
-    **Digital Citizen Hub** bridges the gap between citizens and government through AI and automation.
-    Citizens can submit complaints, track their progress, and view government transparency dashboards.
-    """)
-    st.image("https://cdn-icons-png.flaticon.com/512/2965/2965358.png", width=200)
-    st.success("Empowering citizens through transparency, accountability, and technology!")
-
-# --- Complaint Submission Page ---
-elif menu == "📨 Submit Complaint":
-    st.header("📨 Submit Your Complaint")
-
-    col1, col2 = st.columns(2)
-    with col1:
-        name = st.text_input("Your Name")
-        category = st.selectbox("Select Category", ["Electricity", "Water Supply", "Roads", "Education", "Health", "Other"])
-        urgency = st.slider("Urgency Level", 1, 5, 3)
-    with col2:
-        location = st.text_input("City / Area")
-        image = st.file_uploader("Attach an image (optional)", type=["png", "jpg", "jpeg"])
-        complaint = st.text_area("Describe your issue")
-
-    if st.button("Submit Complaint"):
-        if not complaint.strip():
-            st.warning("⚠️ Please describe your complaint before submitting.")
-        else:
-            tracking_id = f"CMP-{random.randint(1000,9999)}"
-            st.success(f"✅ Complaint submitted successfully! Your tracking ID: **{tracking_id}**")
-
-            # Simulate AI feedback
-            st.info("🤖 AI Analysis Result:")
-            ai_feedback = random.choice([
-                "This issue appears to be critical and related to infrastructure.",
-                "Complaint categorized as a routine maintenance issue.",
-                "Possible service disruption reported in your area.",
-                "High-priority complaint — alerting local authorities.",
-                "AI detected multiple similar complaints from your region."
-            ])
-            st.write(ai_feedback)
-
-            st.write(f"**Estimated Resolution Time:** {random.randint(2,7)} days")
-
-# --- Complaint Tracking Page ---
-elif menu == "🔎 Track Complaint":
-    st.header("🔎 Track Your Complaint Status")
-    tracking_input = st.text_input("Enter your Tracking ID (e.g., CMP-1234)")
-
-    if st.button("Check Status"):
-        if tracking_input.strip() == "":
-            st.warning("Please enter a valid Tracking ID.")
-        else:
-            st.success(f"Tracking ID: {tracking_input}")
-            status = random.choice(["Pending", "In Progress", "Resolved", "Under Review"])
-            progress = {"Pending": 20, "In Progress": 60, "Under Review": 80, "Resolved": 100}[status]
-            st.info(f"Current Status: **{status}**")
-            st.progress(progress/100)
-            st.write(f"Last Updated: {datetime.datetime.now().strftime('%d-%m-%Y %H:%M:%S')}")
-
-# --- Dashboard Page ---
-elif menu == "📊 Dashboard":
-    st.header("📊 Transparency & Accountability Dashboard")
-
-    data = {
-        "Department": ["Electricity", "Water", "Roads", "Education", "Health"],
-        "Complaints": [random.randint(30, 120) for _ in range(5)],
-        "Resolved (%)": [random.randint(40, 95) for _ in range(5)],
+# --- Custom CSS for Styling ---
+st.markdown("""
+    <style>
+    .main-title {
+        font-size: 38px;
+        font-weight: 700;
+        color: #003566;
+        text-align: center;
+        margin-bottom: 0.3em;
     }
-    df = pd.DataFrame(data)
-    col1, col2 = st.columns(2)
+    .subtitle {
+        font-size: 18px;
+        color: #555;
+        text-align: center;
+        margin-bottom: 2em;
+    }
+    .feature-card {
+        background-color: #f9f9f9;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        transition: all 0.2s ease;
+    }
+    .feature-card:hover {
+        background-color: #eef3fa;
+    }
+    </style>
+""", unsafe_allow_html=True)
 
-    with col1:
-        st.subheader("📋 Complaint Overview")
-        st.dataframe(df)
+# --- Language selector ---
+lang = st.sidebar.radio("🌐 Choose Language / زبان منتخب کریں", ("English", "اردو"))
 
-    with col2:
-        st.subheader("📈 Performance Chart")
-        st.bar_chart(df.set_index("Department")["Resolved (%)"])
+# --- Text dictionary ---
+text = {
+    "English": {
+        "title": "Digital Citizen Hub",
+        "subtitle": "An AI-powered GovTech platform transforming governance in Balochistan.",
+        "about": "Digital Citizen Hub leverages Artificial Intelligence to make public services transparent, efficient, and citizen-focused. From complaint automation to policy intelligence — everything in one ecosystem.",
+        "sections": {
+            "Complaint": ("Citizen Service Automation & Complaint Redressal", 
+                          "Citizens can submit complaints through web or mobile (text, voice, or image). AI categorizes and routes them automatically for faster resolution."),
+            "Transparency": ("Transparency & Accountability Dashboard", 
+                             "A public dashboard shows complaint data, resolution times, and departmental performance to ensure accountability."),
+            "Policy": ("AI-Driven Policy Recommendations", 
+                       "AI analyzes citizen feedback and government data to identify policy gaps and recommend improvements."),
+            "Fraud": ("Fraud Detection in Public Finance", 
+                      "Machine learning models detect anomalies in government transactions to ensure financial integrity.")
+        },
+        "footer": "Empowering governance through AI and transparency 🇵🇰"
+    },
+    "اردو": {
+        "title": "ڈیجیٹل سٹیزن حب",
+        "subtitle": "بلوچستان میں گورننس کو بہتر بنانے کے لیے مصنوعی ذہانت سے چلنے والا پلیٹ فارم۔",
+        "about": "ڈیجیٹل سٹیزن حب عوامی خدمات کو شفاف، مؤثر اور شہریوں کے لیے آسان بنانے کے لیے مصنوعی ذہانت استعمال کرتا ہے۔ شکایات کے خودکار نظام سے لے کر پالیسی تجاویز تک — سب کچھ ایک ہی پلیٹ فارم پر۔",
+        "sections": {
+            "Complaint": ("شہری خدمات اور شکایات کا خودکار نظام", 
+                          "شہری ویب یا موبائل کے ذریعے (متن، آواز یا تصویر) شکایات درج کر سکتے ہیں۔ مصنوعی ذہانت ان کو خودکار طور پر متعلقہ محکمے کو بھیجتی ہے۔"),
+            "Transparency": ("شفافیت اور احتساب کا ڈیش بورڈ", 
+                             "ایک عوامی ڈیش بورڈ شکایات، حل کے وقت اور محکموں کی کارکردگی کے اعداد و شمار ظاہر کرتا ہے تاکہ احتساب یقینی بنایا جا سکے۔"),
+            "Policy": ("پالیسی کے لیے مصنوعی ذہانت پر مبنی تجاویز", 
+                       "مصنوعی ذہانت شہری آراء اور سرکاری ڈیٹا کا تجزیہ کر کے پالیسی میں موجود خامیوں اور بہتری کے مواقع کی نشاندہی کرتی ہے۔"),
+            "Fraud": ("عوامی مالیات میں دھوکہ دہی کی نشاندہی", 
+                      "مشین لرننگ ماڈلز سرکاری مالیاتی لین دین میں بے ضابطگیوں کا پتہ لگاتے ہیں تاکہ مالی شفافیت یقینی بنائی جا سکے۔")
+        },
+        "footer": "مصنوعی ذہانت اور شفافیت کے ذریعے گورننس کو مضبوط بنانا 🇵🇰"
+    }
+}
 
-    avg_res = df["Resolved (%)"].mean()
-    total_complaints = sum(df["Complaints"])
+# --- Page content ---
+st.markdown(f"<h1 class='main-title'>{text[lang]['title']}</h1>", unsafe_allow_html=True)
+st.markdown(f"<p class='subtitle'>{text[lang]['subtitle']}</p>", unsafe_allow_html=True)
+st.write("---")
 
-    st.metric(label="Average Resolution Rate", value=f"{avg_res:.1f}%")
-    st.metric(label="Total Complaints Logged", value=total_complaints)
+# About section
+st.info(text[lang]["about"])
 
-# --- About Page ---
-elif menu == "ℹ️ About":
-    st.header("ℹ️ About Digital Citizen Hub")
-    st.write("""
-    **Digital Citizen Hub** is an AI-powered GovTech solution to improve governance in Balochistan.
-    It automates complaint redressal, promotes transparency, and supports policy-making through data analytics.
+# --- Features Grid ---
+cols = st.columns(2)
+for i, (key, (title, desc)) in enumerate(text[lang]["sections"].items()):
+    with cols[i % 2]:
+        st.markdown(f"<div class='feature-card'><h4>{title}</h4><p>{desc}</p></div>", unsafe_allow_html=True)
+        st.write("")
 
-    **Core Features:**
-    - 🧠 AI-driven complaint categorization  
-    - 🕵️ Fraud detection in public finance *(future module)*  
-    - 📊 Real-time transparency dashboard  
-    - 🔍 Complaint tracking and citizen feedback  
-    - 🌐 Inclusive design for all literacy levels  
-    """)
-
-    st.success("Developed by Team Algorithm Avengers 🚀")
+st.write("---")
+st.markdown(f"### {text[lang]['footer']}")
