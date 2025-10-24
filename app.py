@@ -131,17 +131,21 @@ elif page == text[lang]["track"]:
     complaint_id = st.text_input(text[lang]["track_input"])
     if st.button(text[lang]["track_btn"]):
         if complaint_id.strip():
+            # Search complaint in session state
             found = None
             for c in st.session_state.complaints:
                 if str(c["ID"]) == complaint_id.strip():
                     found = c
                     break
             if found:
-                st.success(f"✅ Complaint ID {found['ID']} - Status: {found['Status']}\nAssigned Dept: {found['Department']}")
+                # Display status and department
+                status_display = "✅ Resolved" if found["Status"]=="Resolved" else "🕓 Pending" if lang=="English" else "🕓 زیرِ کارروائی"
+                st.success(f"Complaint ID {found['ID']}\nStatus: {status_display}\nAssigned Dept: {found['Department']}")
             else:
                 st.warning("❌ Complaint not found!" if lang=="English" else "❌ شکایت موجود نہیں!")
         else:
             st.warning("⚠️ Enter a valid ID!" if lang=="English" else "⚠️ درست آئی ڈی درج کریں!")
+
 
 # --- DASHBOARD ---
 elif page == text[lang]["dashboard"]:
