@@ -34,7 +34,7 @@ lang = st.sidebar.radio("🌐 Choose Language / زبان منتخب کریں", [
 # --- Text dictionary ---
 text = {
     "English": {
-        "home":"Home", "submit":"Submit Complaint","track":"Track Complaint","dashboard":"Dashboard",
+        "home":"Home", "submit":"Submit Complaint","track":"Track Complaint","dashboard":"Dashboard","chatbot":"Chatbot",
         "title":"Digital Citizen Hub – Balochistan","subtitle":"AI-powered platform transforming governance.",
         "mission":"Automating complaints, tracking status, and enhancing transparency in government services.",
         "submit_title":"Submit a Complaint","name":"Full Name","category":"Complaint Type","description":"Describe your issue",
@@ -45,7 +45,7 @@ text = {
         "priority":"Priority","status":"Status","department":"Department"
     },
     "اردو": {
-        "home":"ہوم","submit":"شکایت درج کریں","track":"شکایت ٹریک کریں","dashboard":"ڈیش بورڈ",
+        "home":"ہوم","submit":"شکایت درج کریں","track":"شکایت ٹریک کریں","dashboard":"ڈیش بورڈ","chatbot":"چیٹ بوٹ",
         "title":"ڈیجیٹل سٹیزن حب – بلوچستان","subtitle":"بلوچستان میں گورننس کو بہتر بنانے کے لیے مصنوعی ذہانت سے چلنے والا پلیٹ فارم۔",
         "mission":"شکایات کو خودکار کرنا، ان کی حالت ٹریک کرنا اور سرکاری خدمات میں شفافیت بڑھانا۔",
         "submit_title":"شکایت درج کریں","name":"نام","category":"شکایت کی قسم","description":"مسئلہ بیان کریں",
@@ -59,7 +59,7 @@ text = {
 
 # --- Sidebar Navigation ---
 page = st.sidebar.radio("Navigate", 
-                        [text[lang]["home"], text[lang]["submit"], text[lang]["track"], text[lang]["dashboard"]])
+                        [text[lang]["home"], text[lang]["submit"], text[lang]["track"], text[lang]["dashboard"], text[lang]["chatbot"]])
 
 # --- Department mapping ---
 department_mapping = {
@@ -70,13 +70,12 @@ department_mapping = {
 # --- Priority keywords ---
 priority_keywords = {"High":["urgent","power cut","flood","fire"],"Medium":["delay","broken","slow"],"Low":["minor","small","cosmetic"]}
 
-# --- HOME PAGE ---
+# --- MAIN NAVIGATION ---
 if page == text[lang]["home"]:
     st.title(text[lang]["title"])
     st.subheader(text[lang]["subtitle"])
     st.info(text[lang]["mission"])
 
-# --- SUBMIT COMPLAINT ---
 elif page == text[lang]["submit"]:
     st.header(text[lang]["submit_title"])
     with st.form("complaint_form"):
@@ -85,11 +84,8 @@ elif page == text[lang]["submit"]:
         description = st.text_area(text[lang]["description"], height=120)
         submitted = st.form_submit_button(text[lang]["submit_btn"])
         if submitted and name and description:
-            # Generate ID
             tracking_id = random.randint(1000,9999)
             dept = department_mapping[category]
-            
-            # Determine priority
             text_lower = description.lower()
             priority = "Low"
             for level, words in priority_keywords.items():
@@ -97,23 +93,16 @@ elif page == text[lang]["submit"]:
                     if word in text_lower:
                         priority = level
                         break
-            
-            # Status
             status = "Pending" if lang=="English" else "زیرِ کارروائی"
-            
-            # Save complaint
             complaints_df = pd.concat([complaints_df, pd.DataFrame([{
                 "ID":tracking_id,"Name":name,"Category":category,"Department":dept,
                 "Priority":priority,"Status":status,"Description":description
             }])], ignore_index=True)
             complaints_df.to_csv(DATA_FILE,index=False)
-            
             st.success(f"{text[lang]['success']} #{tracking_id}\n{text[lang]['department']}: {dept}\n{text[lang]['priority']}: {priority}")
-
         elif submitted:
             st.warning("⚠️ Please fill all fields!" if lang=="English" else "⚠️ تمام خانے پُر کریں!")
 
-# --- TRACK COMPLAINT ---
 elif page == text[lang]["track"]:
     st.header(text[lang]["track_title"])
     complaint_id = st.text_input(text[lang]["track_input"])
@@ -131,13 +120,11 @@ elif page == text[lang]["track"]:
         else:
             st.warning("⚠️ Enter a valid ID!" if lang=="English" else "⚠️ درست آئی ڈی درج کریں!")
 
-# --- DASHBOARD ---
 elif page == text[lang]["dashboard"]:
     st.header(text[lang]["dashboard_title"])
     st.write(text[lang]["dashboard_desc"])
     if not complaints_df.empty:
         st.dataframe(complaints_df)
-        # Metrics
         total = len(complaints_df)
         resolved = len(complaints_df[complaints_df["Status"]=="Resolved"])
         pending = total - resolved
@@ -145,8 +132,7 @@ elif page == text[lang]["dashboard"]:
         col1.metric("Total Complaints" if lang=="English" else "کل شکایات", total)
         col2.metric("Resolved" if lang=="English" else "حل شدہ", resolved)
         col3.metric("Pending" if lang=="English" else "زیرِ کارروائی", pending)
-        
-        # Mark as resolved
+
         st.subheader("Admin: Resolve Complaint" if lang=="English" else "ایڈمن: شکایت حل کریں")
         resolve_id = st.number_input("Enter Complaint ID to resolve" if lang=="English" else "حل کرنے کے لیے شکایت کی آئی ڈی درج کریں", min_value=0, step=1)
         if st.button(text[lang]["resolved_btn"]):
@@ -160,14 +146,9 @@ elif page == text[lang]["dashboard"]:
     else:
         st.info("No complaints submitted yet." if lang=="English" else "ابھی کوئی شکایت درج نہیں ہوئی۔")
 
-st.write("---")
-st.markdown(f"**{text[lang]['footer']}**")
-
-#chatbot
-elif page == "Chatbot":
+elif page == text[lang]["chatbot"]:
     st.header("Digital Citizen Hub Chatbot 🤖")
     user_input = st.text_input("You:", "")
-    
     if st.button("Send") and user_input:
         user_input_lower = user_input.lower()
         if "how to submit complaint" in user_input_lower:
@@ -178,3 +159,5 @@ elif page == "Chatbot":
             answer = "Sorry, I don't understand. Please contact support or try again."
         st.text_area("Bot:", value=answer, height=150)
 
+st.write("---")
+st.markdown(f"**{text[lang]['footer']}**")
