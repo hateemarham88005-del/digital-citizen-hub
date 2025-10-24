@@ -177,10 +177,15 @@ elif page == text[lang]["dashboard"]:
     st.write(text[lang]["dashboard_desc"])
     if st.session_state.complaints:
         df = pd.DataFrame(st.session_state.complaints)
-        # Prepare display
         df_display = df.copy()
-        df_display["Priority"] = df_display["Priority"].apply(lambda x: priority_badges[x] if lang=="English" else priority_badges_urdu[x])
-        df_display["Status"] = df_display["Status"].apply(lambda x: status_badges[x] if lang=="English" else status_badges_urdu[x])
+        # Safe mapping for priority
+        df_display["Priority"] = df_display["Priority"].apply(
+            lambda x: priority_badges.get(x, x) if lang=="English" else priority_badges_urdu.get(x, x)
+        )
+        # Safe mapping for status
+        df_display["Status"] = df_display["Status"].apply(
+            lambda x: status_badges.get(x, x) if lang=="English" else status_badges_urdu.get(x, x)
+        )
         st.write(df_display.to_html(escape=False, index=False), unsafe_allow_html=True)
         
         # Metrics
@@ -193,6 +198,3 @@ elif page == text[lang]["dashboard"]:
         col3.metric("Pending" if lang=="English" else "زیرِ کارروائی", pending)
     else:
         st.info("No complaints submitted yet." if lang=="English" else "ابھی کوئی شکایت درج نہیں ہوئی۔")
-
-st.write("---")
-st.markdown(f"**{text[lang]['footer']}**")
