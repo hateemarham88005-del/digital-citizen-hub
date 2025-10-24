@@ -133,14 +133,24 @@ elif page == text[lang]["submit"]:
             st.warning("⚠️ Please fill all fields!" if lang=="English" else "⚠️ تمام خانے پُر کریں!")
 
 # --- TRACK COMPLAINT ---
+# --- TRACK COMPLAINT ---
 elif page == text[lang]["track"]:
     st.header(text[lang]["track_title"])
     complaint_id = st.text_input(text[lang]["track_input"])
     if st.button(text[lang]["track_btn"]):
         if complaint_id.strip():
-            found = next((c for c in st.session_state.complaints if str(c["ID"]) == complaint_id.strip()), None)
+            try:
+                # Convert input to integer for exact match
+                cid = int(complaint_id.strip())
+                # Search complaint in session state
+                found = next((c for c in st.session_state.complaints if c["ID"] == cid), None)
+            except ValueError:
+                found = None
+
             if found:
+                # Display status
                 status_display = "✅ Resolved" if found["Status"]=="Resolved" else "🕓 Pending" if lang=="English" else "🕓 زیرِ کارروائی"
+                # Display priority
                 priority_display = priority_colors[found["Priority"]] if lang=="English" else priority_colors_urdu[found["Priority"]]
                 st.success(f"Complaint ID {found['ID']}\nStatus: {status_display}\nAssigned Dept: {found['Department']}\nPriority: {priority_display}")
             else:
