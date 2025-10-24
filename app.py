@@ -162,3 +162,19 @@ elif page == text[lang]["dashboard"]:
 
 st.write("---")
 st.markdown(f"**{text[lang]['footer']}**")
+
+#chatbot
+elif page == "Chatbot":
+    st.header("Digital Citizen Hub Chatbot 🤖")
+    user_input = st.text_input("You:", "")
+    
+    if st.button("Send") and user_input:
+        user_input_lower = user_input.lower()
+        if "how to submit complaint" in user_input_lower:
+            answer = "You can submit a complaint by going to 'Submit Complaint' page and filling the form."
+        elif "track complaint" in user_input_lower:
+            answer = "Go to 'Track Complaint' page and enter your tracking ID."
+        else:
+            answer = "Sorry, I don't understand. Please contact support or try again."
+        st.text_area("Bot:", value=answer, height=150)
+
