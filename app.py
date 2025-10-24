@@ -1,121 +1,138 @@
 import streamlit as st
+import pandas as pd
 import random
 
-# --- PAGE CONFIG ---
+# Page config
 st.set_page_config(page_title="Digital Citizen Hub", page_icon="🌐", layout="wide")
 
-# --- CUSTOM CSS ---
+# --- CSS styling ---
 st.markdown("""
 <style>
-.main-title {
-    font-size: 36px; font-weight: 700; color: #003566; text-align: center; margin-bottom: 5px;
-}
-.subtitle {
-    text-align: center; color: #555; font-size: 18px; margin-bottom: 25px;
-}
+body {background-color: #f7f9fc;}
+h1, h2, h3 {color: #003566; font-weight: 700;}
 .card {
-    background-color: #f9f9f9; border-radius: 12px; padding: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05); margin-bottom: 15px;
+    background-color: white; border-radius: 12px; padding: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 15px;
 }
+.sidebar .sidebar-content {background-color: #e1e8f0;}
 </style>
 """, unsafe_allow_html=True)
 
-# --- LANGUAGE SELECTOR ---
+# --- Language Selector ---
 lang = st.sidebar.radio("🌐 Choose Language / زبان منتخب کریں", ["English", "اردو"])
 
-# --- PAGE SELECTOR ---
-page = st.sidebar.radio(
-    "📑 Navigate",
-    ["Submit Complaint" if lang == "English" else "شکایت درج کریں",
-     "Track Complaint" if lang == "English" else "شکایت ٹریک کریں",
-     "Dashboard" if lang == "English" else "ڈیش بورڈ"]
-)
-
-# --- TRANSLATION DATA ---
+# --- Translation dictionary ---
 text = {
     "English": {
-        "title": "Digital Citizen Hub",
-        "subtitle": "AI-powered platform transforming governance in Balochistan.",
+        "home": "Home",
+        "submit": "Submit Complaint",
+        "track": "Track Complaint",
+        "dashboard": "Dashboard",
+        "title": "Digital Citizen Hub – Balochistan",
+        "subtitle": "AI-powered platform transforming governance.",
+        "mission": "Automating complaints, tracking status, and enhancing transparency in government services.",
         "submit_title": "Submit a Complaint",
-        "submit_desc": "Fill out the form below to report an issue. AI will categorize and route your complaint automatically.",
         "name": "Full Name",
         "category": "Complaint Type",
         "description": "Describe your issue",
+        "image": "Upload an optional image",
         "submit_btn": "Submit Complaint",
         "success": "✅ Your complaint has been submitted! Tracking ID:",
         "track_title": "Track Your Complaint",
         "track_input": "Enter your Complaint ID",
         "track_btn": "Check Status",
-        "status_result": "Your complaint is currently being processed by the relevant department.",
         "dashboard_title": "Transparency Dashboard",
-        "dashboard_desc": "Real-time summary of complaints and resolutions.",
+        "dashboard_desc": "Overview of complaints in the system.",
         "footer": "Empowering governance through AI and transparency 🇵🇰"
     },
     "اردو": {
-        "title": "ڈیجیٹل سٹیزن حب",
+        "home": "ہوم",
+        "submit": "شکایت درج کریں",
+        "track": "شکایت ٹریک کریں",
+        "dashboard": "ڈیش بورڈ",
+        "title": "ڈیجیٹل سٹیزن حب – بلوچستان",
         "subtitle": "بلوچستان میں گورننس کو بہتر بنانے کے لیے مصنوعی ذہانت سے چلنے والا پلیٹ فارم۔",
+        "mission": "شکایات کو خودکار کرنا، ان کی حالت ٹریک کرنا اور سرکاری خدمات میں شفافیت بڑھانا۔",
         "submit_title": "شکایت درج کریں",
-        "submit_desc": "مسئلہ رپورٹ کرنے کے لیے نیچے دیا گیا فارم پُر کریں۔ مصنوعی ذہانت آپ کی شکایت کو خودکار طور پر درجہ بند کرے گی۔",
         "name": "نام",
         "category": "شکایت کی قسم",
         "description": "مسئلہ بیان کریں",
+        "image": "اختیاری تصویر اپ لوڈ کریں",
         "submit_btn": "شکایت جمع کریں",
-        "success": "✅ آپ کی شکایت موصول ہو گئی ہے! ٹریکنگ آئی ڈی:",
+        "success": "✅ آپ کی شکایت موصول ہو گئی! ٹریکنگ آئی ڈی:",
         "track_title": "شکایت ٹریک کریں",
         "track_input": "اپنی شکایت کی آئی ڈی درج کریں",
         "track_btn": "حالت چیک کریں",
-        "status_result": "آپ کی شکایت متعلقہ محکمے میں زیرِ کارروائی ہے۔",
         "dashboard_title": "شفافیت کا ڈیش بورڈ",
-        "dashboard_desc": "شکایات اور ان کے حل کی حقیقی وقت کی رپورٹ۔",
+        "dashboard_desc": "سسٹم میں شکایات کا جائزہ۔",
         "footer": "مصنوعی ذہانت اور شفافیت کے ذریعے گورننس کو مضبوط بنانا 🇵🇰"
     }
 }
 
-# --- PAGE CONTENT ---
-st.markdown(f"<h1 class='main-title'>{text[lang]['title']}</h1>", unsafe_allow_html=True)
-st.markdown(f"<p class='subtitle'>{text[lang]['subtitle']}</p>", unsafe_allow_html=True)
-st.write("---")
+# --- Sidebar Navigation ---
+page = st.sidebar.radio("Navigate", 
+                        [text[lang]["home"], text[lang]["submit"], text[lang]["track"], text[lang]["dashboard"]])
 
-# 📝 Submit Complaint Page
-if page.startswith("Submit") or page.startswith("شکایت"):
+# --- Sample data for dashboard/demo ---
+complaints_df = pd.DataFrame({
+    "ID": [1001,1002,1003,1004],
+    "Type": ["Electricity","Water","Health","Roads"] if lang=="English" else ["بجلی","پانی","صحت","سڑکیں"],
+    "Status": ["Resolved","Pending","Pending","Resolved"] if lang=="English" else ["حل شدہ","زیرِ کارروائی","زیرِ کارروائی","حل شدہ"]
+})
+
+# --- HOME PAGE ---
+if page == text[lang]["home"]:
+    st.title(text[lang]["title"])
+    st.subheader(text[lang]["subtitle"])
+    st.info(text[lang]["mission"])
+
+# --- SUBMIT COMPLAINT ---
+elif page == text[lang]["submit"]:
     st.header(text[lang]["submit_title"])
-    st.write(text[lang]["submit_desc"])
-    st.write("")
-
     with st.form("complaint_form"):
         name = st.text_input(text[lang]["name"])
         category = st.selectbox(
-            text[lang]["category"],
-            ["Electricity", "Water", "Health", "Education", "Roads"] if lang == "English"
-            else ["بجلی", "پانی", "صحت", "تعلیم", "سڑکیں"]
+            text[lang]["category"], 
+            ["Electricity","Water","Health","Roads"] if lang=="English" else ["بجلی","پانی","صحت","سڑکیں"]
         )
         description = st.text_area(text[lang]["description"], height=120)
+        uploaded_file = st.file_uploader(text[lang]["image"], type=["png","jpg","jpeg"])
         submitted = st.form_submit_button(text[lang]["submit_btn"])
-
         if submitted and name and description:
-            complaint_id = random.randint(1000, 9999)
-            st.success(f"{text[lang]['success']} #{complaint_id}")
+            tracking_id = random.randint(1000,9999)
+            st.success(f"{text[lang]['success']} #{tracking_id}")
         elif submitted:
-            st.warning("⚠️ Please fill in all fields!" if lang == "English" else "⚠️ تمام خانے پُر کریں!")
+            st.warning("⚠️ Please fill all fields!" if lang=="English" else "⚠️ تمام خانے پُر کریں!")
 
-# 🔍 Track Complaint Page
-elif page.startswith("Track") or page.startswith("ٹریک"):
+# --- TRACK COMPLAINT ---
+elif page == text[lang]["track"]:
     st.header(text[lang]["track_title"])
     complaint_id = st.text_input(text[lang]["track_input"])
     if st.button(text[lang]["track_btn"]):
         if complaint_id.strip():
-            st.info(f"🕓 {text[lang]['status_result']}")
+            progress = random.randint(20,100)
+            st.progress(progress)
+            st.info("🕓 Your complaint is being processed..." if lang=="English" else "🕓 آپ کی شکایت زیرِ کارروائی ہے...")
         else:
-            st.warning("⚠️ Enter a valid ID!" if lang == "English" else "⚠️ درست آئی ڈی درج کریں!")
+            st.warning("⚠️ Enter a valid ID!" if lang=="English" else "⚠️ درست آئی ڈی درج کریں!")
 
-# 📊 Dashboard Page
-else:
+# --- DASHBOARD ---
+elif page == text[lang]["dashboard"]:
     st.header(text[lang]["dashboard_title"])
     st.write(text[lang]["dashboard_desc"])
-    col1, col2, col3 = st.columns(3)
-    col1.metric("Total Complaints" if lang == "English" else "کل شکایات", "1,245")
-    col2.metric("Resolved" if lang == "English" else "حل شدہ", "982")
-    col3.metric("Pending" if lang == "English" else "زیرِ کارروائی", "263")
+    st.subheader("Complaints Summary" if lang=="English" else "شکایات کا خلاصہ")
+    
+    # Metrics
+    total = len(complaints_df)
+    resolved = len(complaints_df[complaints_df['Status']=="Resolved" if lang=="English" else "حل شدہ"])
+    pending = total - resolved
+    col1,col2,col3 = st.columns(3)
+    col1.metric("Total Complaints" if lang=="English" else "کل شکایات", total)
+    col2.metric("Resolved" if lang=="English" else "حل شدہ", resolved)
+    col3.metric("Pending" if lang=="English" else "زیرِ کارروائی", pending)
+    
+    st.subheader("Recent Complaints" if lang=="English" else "حالیہ شکایات")
+    st.table(complaints_df)
 
-    st.write("---")
-    st.markdown(f"### {text[lang]['footer']}")
+st.write("---")
+st.markdown(f"**{text[lang]['footer']}**")
