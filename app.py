@@ -12,9 +12,11 @@ body {background-color: #f7f9fc;}
 h1, h2, h3 {color: #003566; font-weight: 700;}
 .card {background-color: white; border-radius: 12px; padding: 20px;
       box-shadow: 0 4px 15px rgba(0,0,0,0.08); margin-bottom: 15px;}
-.status-high {color: red; font-weight: bold;}
-.status-medium {color: orange; font-weight: bold;}
-.status-low {color: green; font-weight: bold;}
+.status-resolved {color: green; font-weight: bold; background-color: #d4edda; padding: 3px 6px; border-radius: 5px;}
+.status-pending {color: orange; font-weight: bold; background-color: #fff3cd; padding: 3px 6px; border-radius: 5px;}
+.priority-high {color: red; font-weight: bold;}
+.priority-medium {color: orange; font-weight: bold;}
+.priority-low {color: green; font-weight: bold;}
 </style>
 """, unsafe_allow_html=True)
 
@@ -93,8 +95,18 @@ department_mapping = {
 
 # --- Priority levels ---
 priority_levels = ["Low", "Medium", "High"]
-priority_colors = {"Low":"🟢 Low", "Medium":"🟠 Medium", "High":"🔴 High"}
-priority_colors_urdu = {"Low":"🟢 کم","Medium":"🟠 درمیانہ","High":"🔴 زیادہ"}
+
+# --- Priority & Status badges ---
+priority_badges = {"Low": '<span class="priority-low">Low</span>',
+                   "Medium": '<span class="priority-medium">Medium</span>',
+                   "High": '<span class="priority-high">High</span>'}
+priority_badges_urdu = {"Low": '<span class="priority-low">کم</span>',
+                        "Medium": '<span class="priority-medium">درمیانہ</span>',
+                        "High": '<span class="priority-high">زیادہ</span>'}
+status_badges = {"Pending": '<span class="status-pending">Pending</span>',
+                 "Resolved": '<span class="status-resolved">Resolved</span>'}
+status_badges_urdu = {"زیرِ کارروائی": '<span class="status-pending">زیرِ کارروائی</span>',
+                      "حل شدہ": '<span class="status-resolved">حل شدہ</span>'}
 
 # --- HOME PAGE ---
 if page == text[lang]["home"]:
@@ -127,12 +139,11 @@ elif page == text[lang]["submit"]:
                 "Priority": priority,
                 "Status": "Pending" if lang=="English" else "زیرِ کارروائی"
             })
-            priority_display = priority_colors[priority] if lang=="English" else priority_colors_urdu[priority]
-            st.success(f"{text[lang]['success']} #{tracking_id}\nAssigned to: {assigned_dept}\nPriority: {priority_display}")
+            priority_display = priority_badges[priority] if lang=="English" else priority_badges_urdu[priority]
+            st.success(f"{text[lang]['success']} #{tracking_id}\nAssigned to: {assigned_dept}\nPriority: {priority_display}", unsafe_allow_html=True)
         elif submitted:
             st.warning("⚠️ Please fill all fields!" if lang=="English" else "⚠️ تمام خانے پُر کریں!")
 
-# --- TRACK COMPLAINT ---
 # --- TRACK COMPLAINT ---
 elif page == text[lang]["track"]:
     st.header(text[lang]["track_title"])
@@ -140,19 +151,21 @@ elif page == text[lang]["track"]:
     if st.button(text[lang]["track_btn"]):
         if complaint_id.strip():
             try:
-                # Convert input to integer for exact match
                 cid = int(complaint_id.strip())
-                # Search complaint in session state
                 found = next((c for c in st.session_state.complaints if c["ID"] == cid), None)
             except ValueError:
                 found = None
 
             if found:
-                # Display status
-                status_display = "✅ Resolved" if found["Status"]=="Resolved" else "🕓 Pending" if lang=="English" else "🕓 زیرِ کارروائی"
-                # Display priority
-                priority_display = priority_colors[found["Priority"]] if lang=="English" else priority_colors_urdu[found["Priority"]]
-                st.success(f"Complaint ID {found['ID']}\nStatus: {status_display}\nAssigned Dept: {found['Department']}\nPriority: {priority_display}")
+                # Display status & priority
+                status_display = status_badges[found["Status"]] if lang=="English" else status_badges_urdu[found["Status"]]
+                priority_display = priority_badges[found["Priority"]] if lang=="English" else priority_badges_urdu[found["Priority"]]
+                st.markdown(f"**Complaint ID:** {found['ID']}  \n**Status:** {status_display}  \n**Department:** {found['Department']}  \n**Priority:** {priority_display}", unsafe_allow_html=True)
+                
+                # Resolve button
+                if st.button(text[lang]["resolved_btn"]):
+                    found["Status"] = "Resolved" if lang=="English" else "حل شدہ"
+                    st.success("✅ Complaint marked as resolved!" if lang=="English" else "✅ شکایت حل شدہ قرار دی گئی!")
             else:
                 st.warning("❌ Complaint not found!" if lang=="English" else "❌ شکایت موجود نہیں!")
         else:
@@ -164,16 +177,22 @@ elif page == text[lang]["dashboard"]:
     st.write(text[lang]["dashboard_desc"])
     if st.session_state.complaints:
         df = pd.DataFrame(st.session_state.complaints)
-        # Priority display
+        # Prepare display
         df_display = df.copy()
-        df_display["Priority"] = df_display["Priority"].apply(lambda x: priority_colors[x] if lang=="English" else priority_colors_urdu[x])
-        st.table(df_display)
+        df_display["Priority"] = df_display["Priority"].apply(lambda x: priority_badges[x] if lang=="English" else priority_badges_urdu[x])
+        df_display["Status"] = df_display["Status"].apply(lambda x: status_badges[x] if lang=="English" else status_badges_urdu[x])
+        st.write(df_display.to_html(escape=False, index=False), unsafe_allow_html=True)
+        
         # Metrics
         total = len(df)
-        resolved = len([c for c in df["Status"] if c=="Resolved"])
+        resolved = len([c for c in df["Status"] if "Resolved" in c or "حل شدہ" in c])
         pending = total - resolved
         col1, col2, col3 = st.columns(3)
         col1.metric("Total Complaints" if lang=="English" else "کل شکایات", total)
         col2.metric("Resolved" if lang=="English" else "حل شدہ", resolved)
         col3.metric("Pending" if lang=="English" else "زیرِ کارروائی", pending)
-        #
+    else:
+        st.info("No complaints submitted yet." if lang=="English" else "ابھی کوئی شکایت درج نہیں ہوئی۔")
+
+st.write("---")
+st.markdown(f"**{text[lang]['footer']}**")
