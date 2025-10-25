@@ -26,186 +26,223 @@ else:
         "Status", "Description", "Sentiment", "Image"
     ])
 
-# --- Clean Professional CSS ---
+# --- Professional CSS Styling ---
 st.markdown("""
 <style>
-    /* Clean white background */
+    /* Main styling */
     .main {
         background-color: #ffffff;
     }
     
     .main .block-container {
         padding-top: 2rem;
+        max-width: 1200px;
     }
     
     /* Professional Headers */
     .main-header {
-        font-size: 2.2rem;
+        font-size: 2.5rem;
         font-weight: 600;
-        color: #1f2937;
+        color: #1a202c;
         text-align: center;
-        margin-bottom: 1rem;
+        margin-bottom: 1.5rem;
         padding-bottom: 1rem;
-        border-bottom: 2px solid #e5e7eb;
+        border-bottom: 2px solid #e2e8f0;
     }
     
     .section-header {
         font-size: 1.5rem;
         font-weight: 600;
-        color: #1f2937;
+        color: #2d3748;
         margin-bottom: 1.5rem;
     }
     
     /* Clean Cards */
     .custom-card {
-        background: white;
+        background: #ffffff;
         border-radius: 8px;
         padding: 2rem;
-        border: 1px solid #e5e7eb;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         margin-bottom: 1.5rem;
     }
     
     /* Professional Metrics */
     .metric-card {
-        background: white;
+        background: #f7fafc;
         border-radius: 8px;
         padding: 1.5rem;
         text-align: center;
-        border: 1px solid #e5e7eb;
+        border: 1px solid #e2e8f0;
     }
     
     .metric-value {
         font-size: 2rem;
         font-weight: 600;
-        color: #2563eb;
+        color: #2d3748;
         margin-bottom: 0.5rem;
     }
     
     .metric-label {
         font-size: 0.9rem;
-        color: #6b7280;
+        color: #718096;
         font-weight: 500;
     }
     
-    /* Clean Buttons */
+    /* Professional Buttons */
     .stButton button {
-        background-color: #2563eb;
+        background-color: #2b6cb0;
         color: white;
         border: none;
         border-radius: 6px;
         padding: 0.75rem 1.5rem;
         font-weight: 500;
         width: 100%;
-        transition: background-color 0.2s;
+        font-size: 0.9rem;
     }
     
     .stButton button:hover {
-        background-color: #1d4ed8;
+        background-color: #2c5282;
     }
     
     /* Form Styling */
     .stTextInput input, .stTextArea textarea, .stSelectbox select {
         border-radius: 6px;
-        border: 1px solid #d1d5db;
+        border: 1px solid #cbd5e0;
         padding: 0.75rem;
+        font-size: 0.9rem;
     }
     
     .stTextInput input:focus, .stTextArea textarea:focus, .stSelectbox select:focus {
-        border-color: #2563eb;
-        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+        border-color: #2b6cb0;
+        box-shadow: 0 0 0 1px #2b6cb0;
     }
     
     /* Status Badges */
     .status-pending { 
-        background: #fef3c7; 
-        color: #d97706; 
-        padding: 0.3rem 0.8rem; 
-        border-radius: 12px; 
+        background: #fffaf0; 
+        color: #dd6b20; 
+        padding: 0.4rem 0.8rem; 
+        border-radius: 4px; 
         font-weight: 500; 
         font-size: 0.8rem;
+        border: 1px solid #fed7aa;
     }
     .status-resolved { 
-        background: #d1fae5; 
-        color: #065f46; 
-        padding: 0.3rem 0.8rem; 
-        border-radius: 12px; 
+        background: #f0fff4; 
+        color: #38a169; 
+        padding: 0.4rem 0.8rem; 
+        border-radius: 4px; 
         font-weight: 500; 
         font-size: 0.8rem;
+        border: 1px solid #9ae6b4;
     }
     .status-high { 
-        background: #fee2e2; 
-        color: #dc2626; 
-        padding: 0.3rem 0.8rem; 
-        border-radius: 12px; 
+        background: #fed7d7; 
+        color: #c53030; 
+        padding: 0.4rem 0.8rem; 
+        border-radius: 4px; 
         font-weight: 500; 
         font-size: 0.8rem;
+        border: 1px solid #fc8181;
     }
     .status-medium { 
-        background: #fef3c7; 
-        color: #d97706; 
-        padding: 0.3rem 0.8rem; 
-        border-radius: 12px; 
+        background: #feebc8; 
+        color: #dd6b20; 
+        padding: 0.4rem 0.8rem; 
+        border-radius: 4px; 
         font-weight: 500; 
         font-size: 0.8rem;
+        border: 1px solid #fbd38d;
     }
     .status-low { 
-        background: #d1fae5; 
-        color: #065f46; 
-        padding: 0.3rem 0.8rem; 
-        border-radius: 12px; 
+        background: #c6f6d5; 
+        color: #38a169; 
+        padding: 0.4rem 0.8rem; 
+        border-radius: 4px; 
         font-weight: 500; 
         font-size: 0.8rem;
+        border: 1px solid #9ae6b4;
     }
     
-    /* Sidebar Cleanup */
+    /* Sidebar */
     .css-1d391kg {
-        background: #f8fafc;
+        background: #f7fafc;
+        border-right: 1px solid #e2e8f0;
+    }
+    
+    /* Table Styling */
+    .dataframe {
+        font-size: 0.9rem;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # --- Language Selector ---
 st.sidebar.markdown("---")
-lang = st.sidebar.radio("Language / زبان", ["English", "اردو"])
+lang = st.sidebar.radio("Language", ["English", "اردو"])
 
 # --- Text dictionary ---
 text = {
     "English": {
-        "home":"Home", "submit":"Submit Complaint", "track":"Track Complaint",
-        "dashboard":"Dashboard", "chatbot":"Virtual Assistant",
-        "title":"Digital Citizen Hub - Balochistan",
-        "subtitle":"Public Service Complaint Management System",
-        "mission":"Streamlining citizen-government communication through digital innovation",
-        "submit_title":"Submit Complaint", "name":"Full Name",
-        "category":"Complaint Category", "description":"Issue Description",
-        "image":"Attach Image (Optional)", "submit_btn":"Submit Complaint",
-        "success":"Complaint submitted successfully. Tracking ID:",
-        "track_title":"Track Complaint", "track_input":"Enter Complaint ID",
-        "track_btn":"Check Status", "dashboard_title":"Dashboard",
-        "dashboard_desc":"Complaint management and analytics",
-        "footer":"Government of Balochistan",
-        "resolved_btn":"Mark Resolved", "priority":"Priority",
-        "status":"Status", "department":"Department", "role":"Role",
-        "admin_pass":"Admin Password"
+        "home": "Home",
+        "submit": "Submit Complaint", 
+        "track": "Track Complaint",
+        "dashboard": "Dashboard", 
+        "chatbot": "Assistant",
+        "title": "Digital Citizen Hub - Balochistan",
+        "subtitle": "Public Service Complaint Management System",
+        "mission": "Streamlining citizen-government communication through digital innovation",
+        "submit_title": "Submit Complaint", 
+        "name": "Full Name",
+        "category": "Complaint Category", 
+        "description": "Issue Description",
+        "image": "Attach Image (Optional)", 
+        "submit_btn": "Submit Complaint",
+        "success": "Complaint submitted successfully. Tracking ID:",
+        "track_title": "Track Complaint", 
+        "track_input": "Enter Complaint ID",
+        "track_btn": "Check Status", 
+        "dashboard_title": "Administrative Dashboard",
+        "dashboard_desc": "Complaint management and analytics",
+        "footer": "Government of Balochistan - Digital Transformation Initiative",
+        "resolved_btn": "Mark as Resolved", 
+        "priority": "Priority Level",
+        "status": "Current Status", 
+        "department": "Responsible Department", 
+        "role": "Select Role",
+        "admin_pass": "Administrator Password",
+        "stats_title": "System Overview"
     },
     "اردو": {
-        "home":"ہوم", "submit":"شکایت درج کریں", "track":"شکایت ٹریک کریں",
-        "dashboard":"ڈیش بورڈ", "chatbot":"ورچوئل معاون",
-        "title":"ڈیجیٹل سٹیزن حب - بلوچستان",
-        "subtitle":"عوامی خدمات کی شکایت مینجمنٹ سسٹم",
-        "mission":"ڈیجیٹل اختراع کے ذریعے شہری-حکومت مواصلات کو بہتر بنانا",
-        "submit_title":"شکایت درج کریں", "name":"مکمل نام",
-        "category":"شکایت کی قسم", "description":"مسئلے کی تفصیل",
-        "image":"تصویر منسلک کریں (اختیاری)", "submit_btn":"شکایت جمع کریں",
-        "success":"شکایت کامیابی سے جمع ہو گئی۔ ٹریکنگ آئی ڈی:",
-        "track_title":"شکایت ٹریک کریں", "track_input":"شکایت کی آئی ڈی درج کریں",
-        "track_btn":"حالت چیک کریں", "dashboard_title":"ڈیش بورڈ",
-        "dashboard_desc":"شکایت مینجمنٹ اور تجزیات",
-        "footer":"حکومت بلوچستان",
-        "resolved_btn":"حل شدہ قرار دیں", "priority":"ترجیح",
-        "status":"حالت", "department":"محکمہ", "role":"کردار",
-        "admin_pass":"ایڈمن پاس ورڈ"
+        "home": "ہوم",
+        "submit": "شکایت درج کریں", 
+        "track": "شکایت ٹریک کریں",
+        "dashboard": "ڈیش بورڈ", 
+        "chatbot": "معاون",
+        "title": "ڈیجیٹل سٹیزن حب - بلوچستان",
+        "subtitle": "عوامی خدمات کی شکایت مینجمنٹ سسٹم",
+        "mission": "ڈیجیٹل اختراع کے ذریعے شہری-حکومت مواصلات کو بہتر بنانا",
+        "submit_title": "شکایت درج کریں", 
+        "name": "مکمل نام",
+        "category": "شکایت کی قسم", 
+        "description": "مسئلے کی تفصیل",
+        "image": "تصویر منسلک کریں (اختیاری)", 
+        "submit_btn": "شکایت جمع کریں",
+        "success": "شکایت کامیابی سے جمع ہو گئی۔ ٹریکنگ آئی ڈی:",
+        "track_title": "شکایت ٹریک کریں", 
+        "track_input": "شکایت کی آئی ڈی درج کریں",
+        "track_btn": "حالت چیک کریں", 
+        "dashboard_title": "ایڈمنسٹریٹو ڈیش بورڈ",
+        "dashboard_desc": "شکایت مینجمنٹ اور تجزیات",
+        "footer": "حکومت بلوچستان - ڈیجیٹل تبدیلی کا اقدام",
+        "resolved_btn": "حل شدہ قرار دیں", 
+        "priority": "ترجیحی سطح",
+        "status": "موجودہ حالت", 
+        "department": "ذمہ دار محکمہ", 
+        "role": "کردار منتخب کریں",
+        "admin_pass": "ایڈمنسٹریٹر پاس ورڈ",
+        "stats_title": "سسٹم کا جائزہ"
     }
 }
 
@@ -215,120 +252,20 @@ role = st.sidebar.selectbox(text[lang]["role"], ["Citizen", "Administrator"])
 
 # --- Admin authentication ---
 if role == "Administrator":
+    st.sidebar.markdown("---")
     admin_password = st.sidebar.text_input(text[lang]["admin_pass"], type="password")
     if admin_password != "admin123":
-        st.error("Access Denied")
+        st.error("Access Denied - Invalid Credentials")
         st.stop()
 
 # --- Navigation ---
-import { Link, useLocation } from "react-router-dom";
-import { Home, FileText, Search, LayoutDashboard, Bot, Globe } from "lucide-react";
-import { useLanguage } from "@/contexts/LanguageContext";
-import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+st.sidebar.markdown("---")
+if role == "Citizen":
+    nav_options = [text[lang]["home"], text[lang]["submit"], text[lang]["track"], text[lang]["chatbot"]]
+else:
+    nav_options = [text[lang]["home"], text[lang]["dashboard"], text[lang]["chatbot"]]
 
-interface NavigationProps {
-  role: "Citizen" | "Admin";
-}
-
-export const Navigation = ({ role }: NavigationProps) => {
-  const location = useLocation();
-  const { language, setLanguage, t } = useLanguage();
-
-  const citizenLinks = [
-    { path: "/", label: t("home"), icon: Home },
-    { path: "/submit", label: t("submit"), icon: FileText },
-    { path: "/track", label: t("track"), icon: Search },
-    { path: "/chatbot", label: t("chatbot"), icon: Bot },
-  ];
-
-  const adminLinks = [
-    { path: "/", label: t("home"), icon: Home },
-    { path: "/dashboard", label: t("dashboard"), icon: LayoutDashboard },
-    { path: "/chatbot", label: t("chatbot"), icon: Bot },
-  ];
-
-  const links = role === "Citizen" ? citizenLinks : adminLinks;
-
-  return (
-    <nav className="bg-card border-b shadow-card">
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <div className="flex items-center space-x-8">
-            <Link to="/" className="flex items-center space-x-2">
-              <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center">
-                <Globe className="w-6 h-6 text-primary-foreground" />
-              </div>
-              <span className="font-bold text-xl text-primary hidden md:block">
-                {language === "English" ? "DCH" : "ڈی سی ایچ"}
-              </span>
-            </Link>
-
-            <div className="hidden md:flex space-x-1">
-              {links.map((link) => {
-                const Icon = link.icon;
-                const isActive = location.pathname === link.path;
-                return (
-                  <Link key={link.path} to={link.path}>
-                    <Button
-                      variant={isActive ? "default" : "ghost"}
-                      size="sm"
-                      className="gap-2"
-                    >
-                      <Icon className="w-4 h-4" />
-                      {link.label}
-                    </Button>
-                  </Link>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <Select
-              value={language}
-              onValueChange={(value) => setLanguage(value as "English" | "اردو")}
-            >
-              <SelectTrigger className="w-[140px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="English">🇬🇧 English</SelectItem>
-                <SelectItem value="اردو">🇵🇰 اردو</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {/* Mobile Navigation */}
-        <div className="md:hidden pb-3 flex gap-2 overflow-x-auto">
-          {links.map((link) => {
-            const Icon = link.icon;
-            const isActive = location.pathname === link.path;
-            return (
-              <Link key={link.path} to={link.path}>
-                <Button
-                  variant={isActive ? "default" : "ghost"}
-                  size="sm"
-                  className="gap-2 whitespace-nowrap"
-                >
-                  <Icon className="w-4 h-4" />
-                  {link.label}
-                </Button>
-              </Link>
-            );
-          })}
-        </div>
-      </div>
-    </nav>
-  );
-};
+page = st.sidebar.radio("Navigation", nav_options)
 
 # --- Helper Functions ---
 def detect_priority(text_input):
@@ -363,34 +300,32 @@ def create_status_badge(status, priority=None):
 department_mapping = {
     "Electricity": "QESCO", 
     "Water": "Water Board", 
-    "Health": "Health Dept", 
+    "Health": "Health Department", 
     "Roads": "Public Works", 
-    "Sanitation": "Municipal",
-    "Other": "General Affairs"
+    "Sanitation": "Municipal Services",
+    "Other": "General Administration"
 }
 
 # --- MAIN LOGIC ---
 if page == text[lang]["home"]:
     st.markdown(f'<h1 class="main-header">{text[lang]["title"]}</h1>', unsafe_allow_html=True)
-    st.markdown(f'<p style="text-align: center; color: #6b7280; font-size: 1.1rem;">{text[lang]["subtitle"]}</p>', unsafe_allow_html=True)
+    st.markdown(f'<p style="text-align: center; color: #4a5568; font-size: 1.1rem; margin-bottom: 3rem;">{text[lang]["subtitle"]}</p>', unsafe_allow_html=True)
     
-    st.markdown('<div class="custom-card">', unsafe_allow_html=True)
-    
-    # Stats
+    # Stats Section
     if not complaints_df.empty:
         total = len(complaints_df)
         resolved = len(complaints_df[complaints_df["Status"] == "Resolved"])
         pending = total - resolved
         
+        st.markdown(f'<div class="section-header">{text[lang]["stats_title"]}</div>', unsafe_allow_html=True)
         col1, col2, col3 = st.columns(3)
+        
         with col1:
             st.markdown(f'<div class="metric-card"><div class="metric-value">{total}</div><div class="metric-label">Total Complaints</div></div>', unsafe_allow_html=True)
         with col2:
             st.markdown(f'<div class="metric-card"><div class="metric-value">{resolved}</div><div class="metric-label">Resolved</div></div>', unsafe_allow_html=True)
         with col3:
             st.markdown(f'<div class="metric-card"><div class="metric-value">{pending}</div><div class="metric-label">Pending</div></div>', unsafe_allow_html=True)
-    
-    st.markdown("</div>", unsafe_allow_html=True)
 
 elif page == text[lang]["submit"] and role == "Citizen":
     st.markdown(f'<h1 class="main-header">{text[lang]["submit_title"]}</h1>', unsafe_allow_html=True)
@@ -510,11 +445,11 @@ elif page == text[lang]["dashboard"] and role == "Administrator":
         col1, col2 = st.columns(2)
         
         with col1:
-            fig1 = px.pie(complaints_df, names="Category", title="By Category")
+            fig1 = px.pie(complaints_df, names="Category", title="Complaints by Category")
             st.plotly_chart(fig1, use_container_width=True)
             
         with col2:
-            fig2 = px.bar(complaints_df, x="Priority", title="By Priority")
+            fig2 = px.bar(complaints_df, x="Priority", title="Complaints by Priority")
             st.plotly_chart(fig2, use_container_width=True)
         
         st.markdown("</div>", unsafe_allow_html=True)
@@ -567,4 +502,4 @@ elif page == text[lang]["chatbot"]:
 
 # Footer
 st.markdown("---")
-st.markdown(f'<div style="text-align: center; color: #6b7280; padding: 2rem;">{text[lang]["footer"]}</div>', unsafe_allow_html=True)
+st.markdown(f'<div style="text-align: center; color: #718096; padding: 2rem;">{text[lang]["footer"]}</div>', unsafe_allow_html=True)
