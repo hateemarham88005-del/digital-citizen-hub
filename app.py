@@ -26,58 +26,69 @@ else:
         "Status", "Description", "Sentiment", "Image"
     ])
 
-# --- Professional CSS Styling ---
+# --- Clean Professional CSS ---
 st.markdown("""
 <style>
+    /* Clean white background */
+    .main {
+        background-color: #ffffff;
+    }
+    
+    .main .block-container {
+        padding-top: 2rem;
+    }
+    
+    /* Professional Headers */
     .main-header {
-        font-size: 2.5rem !important;
-        font-weight: 600 !important;
-        color: #1f2937 !important;
+        font-size: 2.2rem;
+        font-weight: 600;
+        color: #1f2937;
         text-align: center;
-        margin-bottom: 1rem !important;
-        border-bottom: 2px solid #2563eb;
+        margin-bottom: 1rem;
         padding-bottom: 1rem;
+        border-bottom: 2px solid #e5e7eb;
     }
     
-    .sub-header {
-        font-size: 1.2rem !important;
-        color: #4b5563 !important;
-        text-align: center;
-        margin-bottom: 2rem !important;
-        font-weight: 400;
+    .section-header {
+        font-size: 1.5rem;
+        font-weight: 600;
+        color: #1f2937;
+        margin-bottom: 1.5rem;
     }
     
+    /* Clean Cards */
     .custom-card {
         background: white;
         border-radius: 8px;
-        padding: 1.5rem;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        padding: 2rem;
         border: 1px solid #e5e7eb;
-        margin-bottom: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        margin-bottom: 1.5rem;
     }
     
+    /* Professional Metrics */
     .metric-card {
         background: white;
         border-radius: 8px;
         padding: 1.5rem;
         text-align: center;
         border: 1px solid #e5e7eb;
-        box-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
     
     .metric-value {
-        font-size: 2rem !important;
-        font-weight: 600 !important;
-        margin-bottom: 0.5rem !important;
+        font-size: 2rem;
+        font-weight: 600;
         color: #2563eb;
+        margin-bottom: 0.5rem;
     }
     
     .metric-label {
-        font-size: 0.9rem !important;
+        font-size: 0.9rem;
         color: #6b7280;
         font-weight: 500;
     }
     
+    /* Clean Buttons */
     .stButton button {
         background-color: #2563eb;
         color: white;
@@ -86,16 +97,30 @@ st.markdown("""
         padding: 0.75rem 1.5rem;
         font-weight: 500;
         width: 100%;
+        transition: background-color 0.2s;
     }
     
     .stButton button:hover {
         background-color: #1d4ed8;
     }
     
+    /* Form Styling */
+    .stTextInput input, .stTextArea textarea, .stSelectbox select {
+        border-radius: 6px;
+        border: 1px solid #d1d5db;
+        padding: 0.75rem;
+    }
+    
+    .stTextInput input:focus, .stTextArea textarea:focus, .stSelectbox select:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.1);
+    }
+    
+    /* Status Badges */
     .status-pending { 
         background: #fef3c7; 
         color: #d97706; 
-        padding: 0.25rem 0.75rem; 
+        padding: 0.3rem 0.8rem; 
         border-radius: 12px; 
         font-weight: 500; 
         font-size: 0.8rem;
@@ -103,7 +128,7 @@ st.markdown("""
     .status-resolved { 
         background: #d1fae5; 
         color: #065f46; 
-        padding: 0.25rem 0.75rem; 
+        padding: 0.3rem 0.8rem; 
         border-radius: 12px; 
         font-weight: 500; 
         font-size: 0.8rem;
@@ -111,7 +136,7 @@ st.markdown("""
     .status-high { 
         background: #fee2e2; 
         color: #dc2626; 
-        padding: 0.25rem 0.75rem; 
+        padding: 0.3rem 0.8rem; 
         border-radius: 12px; 
         font-weight: 500; 
         font-size: 0.8rem;
@@ -119,7 +144,7 @@ st.markdown("""
     .status-medium { 
         background: #fef3c7; 
         color: #d97706; 
-        padding: 0.25rem 0.75rem; 
+        padding: 0.3rem 0.8rem; 
         border-radius: 12px; 
         font-weight: 500; 
         font-size: 0.8rem;
@@ -127,10 +152,15 @@ st.markdown("""
     .status-low { 
         background: #d1fae5; 
         color: #065f46; 
-        padding: 0.25rem 0.75rem; 
+        padding: 0.3rem 0.8rem; 
         border-radius: 12px; 
         font-weight: 500; 
         font-size: 0.8rem;
+    }
+    
+    /* Sidebar Cleanup */
+    .css-1d391kg {
+        background: #f8fafc;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -146,36 +176,36 @@ text = {
         "dashboard":"Dashboard", "chatbot":"Virtual Assistant",
         "title":"Digital Citizen Hub - Balochistan",
         "subtitle":"Public Service Complaint Management System",
-        "mission":"Streamlining citizen-government communication through digital innovation.",
+        "mission":"Streamlining citizen-government communication through digital innovation",
         "submit_title":"Submit Complaint", "name":"Full Name",
         "category":"Complaint Category", "description":"Issue Description",
         "image":"Attach Image (Optional)", "submit_btn":"Submit Complaint",
         "success":"Complaint submitted successfully. Tracking ID:",
         "track_title":"Track Complaint", "track_input":"Enter Complaint ID",
-        "track_btn":"Check Status", "dashboard_title":"Administrative Dashboard",
+        "track_btn":"Check Status", "dashboard_title":"Dashboard",
         "dashboard_desc":"Complaint management and analytics",
-        "footer":"Government of Balochistan - Digital Transformation Initiative",
+        "footer":"Government of Balochistan",
         "resolved_btn":"Mark Resolved", "priority":"Priority",
         "status":"Status", "department":"Department", "role":"Role",
-        "admin_pass":"Admin Password", "stats_title":"System Overview"
+        "admin_pass":"Admin Password"
     },
     "اردو": {
         "home":"ہوم", "submit":"شکایت درج کریں", "track":"شکایت ٹریک کریں",
         "dashboard":"ڈیش بورڈ", "chatbot":"ورچوئل معاون",
         "title":"ڈیجیٹل سٹیزن حب - بلوچستان",
         "subtitle":"عوامی خدمات کی شکایت مینجمنٹ سسٹم",
-        "mission":"ڈیجیٹل اختراع کے ذریعے شہری-حکومت مواصلات کو بہتر بنانا۔",
+        "mission":"ڈیجیٹل اختراع کے ذریعے شہری-حکومت مواصلات کو بہتر بنانا",
         "submit_title":"شکایت درج کریں", "name":"مکمل نام",
         "category":"شکایت کی قسم", "description":"مسئلے کی تفصیل",
         "image":"تصویر منسلک کریں (اختیاری)", "submit_btn":"شکایت جمع کریں",
         "success":"شکایت کامیابی سے جمع ہو گئی۔ ٹریکنگ آئی ڈی:",
         "track_title":"شکایت ٹریک کریں", "track_input":"شکایت کی آئی ڈی درج کریں",
-        "track_btn":"حالت چیک کریں", "dashboard_title":"ایڈمنسٹریٹو ڈیش بورڈ",
+        "track_btn":"حالت چیک کریں", "dashboard_title":"ڈیش بورڈ",
         "dashboard_desc":"شکایت مینجمنٹ اور تجزیات",
-        "footer":"حکومت بلوچستان - ڈیجیٹل تبدیلی کا اقدام",
+        "footer":"حکومت بلوچستان",
         "resolved_btn":"حل شدہ قرار دیں", "priority":"ترجیح",
         "status":"حالت", "department":"محکمہ", "role":"کردار",
-        "admin_pass":"ایڈمن پاس ورڈ", "stats_title":"سسٹم کا جائزہ"
+        "admin_pass":"ایڈمن پاس ورڈ"
     }
 }
 
@@ -241,14 +271,15 @@ department_mapping = {
 # --- MAIN LOGIC ---
 if page == text[lang]["home"]:
     st.markdown(f'<h1 class="main-header">{text[lang]["title"]}</h1>', unsafe_allow_html=True)
-    st.markdown(f'<h3 class="sub-header">{text[lang]["subtitle"]}</h3>', unsafe_allow_html=True)
+    st.markdown(f'<p style="text-align: center; color: #6b7280; font-size: 1.1rem;">{text[lang]["subtitle"]}</p>', unsafe_allow_html=True)
     
     st.markdown('<div class="custom-card">', unsafe_allow_html=True)
-    st.write(text[lang]["mission"])
     
+    # Stats
     if not complaints_df.empty:
         total = len(complaints_df)
         resolved = len(complaints_df[complaints_df["Status"] == "Resolved"])
+        pending = total - resolved
         
         col1, col2, col3 = st.columns(3)
         with col1:
@@ -256,7 +287,7 @@ if page == text[lang]["home"]:
         with col2:
             st.markdown(f'<div class="metric-card"><div class="metric-value">{resolved}</div><div class="metric-label">Resolved</div></div>', unsafe_allow_html=True)
         with col3:
-            st.markdown(f'<div class="metric-card"><div class="metric-value">{total-resolved}</div><div class="metric-label">Pending</div></div>', unsafe_allow_html=True)
+            st.markdown(f'<div class="metric-card"><div class="metric-value">{pending}</div><div class="metric-label">Pending</div></div>', unsafe_allow_html=True)
     
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -311,8 +342,8 @@ elif page == text[lang]["submit"] and role == "Citizen":
             complaints_df.to_csv(DATA_FILE, index=False)
 
             st.success(f"{text[lang]['success']} #{tracking_id}")
-            st.write(f"**{text[lang]['department']}:** {dept}")
-            st.write(f"**{text[lang]['priority']}:** {priority}")
+            st.write(f"**Department:** {dept}")
+            st.write(f"**Priority:** {priority}")
             
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -338,10 +369,10 @@ elif page == text[lang]["track"] and role == "Citizen":
                 col1, col2 = st.columns(2)
                 with col1:
                     st.write(f"**ID:** #{complaint['ID']}")
-                    st.write(f"**{text[lang]['department']}:** {complaint['Department']}")
-                    st.write(f"**{text[lang]['status']}:** {complaint['Status']}")
+                    st.write(f"**Department:** {complaint['Department']}")
+                    st.write(f"**Status:** {complaint['Status']}")
                 with col2:
-                    st.write(f"**{text[lang]['priority']}:** {complaint['Priority']}")
+                    st.write(f"**Priority:** {complaint['Priority']}")
                     st.write(f"**Sentiment:** {complaint['Sentiment']}")
                 
                 st.write(f"**Description:** {complaint['Description']}")
@@ -373,27 +404,29 @@ elif page == text[lang]["dashboard"] and role == "Administrator":
         
         # Charts
         st.markdown('<div class="custom-card">', unsafe_allow_html=True)
+        st.markdown('<div class="section-header">Analytics</div>', unsafe_allow_html=True)
+        
         col1, col2 = st.columns(2)
         
         with col1:
-            fig1 = px.pie(complaints_df, names="Category", title="Complaints by Category")
+            fig1 = px.pie(complaints_df, names="Category", title="By Category")
             st.plotly_chart(fig1, use_container_width=True)
             
         with col2:
-            fig2 = px.bar(complaints_df, x="Priority", title="Complaints by Priority")
+            fig2 = px.bar(complaints_df, x="Priority", title="By Priority")
             st.plotly_chart(fig2, use_container_width=True)
         
         st.markdown("</div>", unsafe_allow_html=True)
         
         # Data Table
         st.markdown('<div class="custom-card">', unsafe_allow_html=True)
-        st.subheader("Complaint Records")
+        st.markdown('<div class="section-header">Complaint Records</div>', unsafe_allow_html=True)
         st.dataframe(complaints_df, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
         
         # Resolution
         st.markdown('<div class="custom-card">', unsafe_allow_html=True)
-        st.subheader("Complaint Resolution")
+        st.markdown('<div class="section-header">Complaint Resolution</div>', unsafe_allow_html=True)
         resolve_id = st.number_input("Complaint ID to resolve", min_value=0, step=1)
         if st.button(text[lang]["resolved_btn"]):
             complaints_df = pd.read_csv(DATA_FILE)
@@ -433,4 +466,4 @@ elif page == text[lang]["chatbot"]:
 
 # Footer
 st.markdown("---")
-st.markdown(f'<div style="text-align: center; color: #6b7280; padding: 1rem;">{text[lang]["footer"]}</div>', unsafe_allow_html=True)
+st.markdown(f'<div style="text-align: center; color: #6b7280; padding: 2rem;">{text[lang]["footer"]}</div>', unsafe_allow_html=True)
