@@ -284,8 +284,7 @@ if lang == "اردو":
     category_en = translation_map.get(category.strip(), "Other")
 else:
     category_en = category.strip()
-
-            dept = department_mapping.get(category_en, "Other")
+dept = department_mapping.get(category_en, "Other")
             priority = detect_priority(description)
             sentiment = get_sentiment(description)
             status = "Pending"
