@@ -10,12 +10,17 @@ st.set_page_config(page_title="Digital Citizen Hub", page_icon="🌐", layout="w
 
 # --- File to store complaints ---
 DATA_FILE = "complaints.csv"
+UPLOAD_DIR = "uploads"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 # --- Load complaints ---
 if os.path.exists(DATA_FILE):
     complaints_df = pd.read_csv(DATA_FILE)
 else:
-    complaints_df = pd.DataFrame(columns=["ID", "Name", "Category", "Department", "Priority", "Status", "Description", "Sentiment", "Image"])
+    complaints_df = pd.DataFrame(columns=[
+        "ID", "Name", "Category", "Department", "Priority", 
+        "Status", "Description", "Sentiment", "Image"
+    ])
 
 # --- CSS Styling ---
 st.markdown("""
@@ -36,31 +41,51 @@ lang = st.sidebar.radio("🌐 Choose Language / زبان منتخب کریں", [
 # --- Text dictionary ---
 text = {
     "English": {
-        "home":"Home", "submit":"Submit Complaint","track":"Track Complaint","dashboard":"Dashboard","chatbot":"Chatbot",
-        "title":"Digital Citizen Hub – Balochistan","subtitle":"AI-powered platform transforming governance.",
+        "home":"Home","submit":"Submit Complaint","track":"Track Complaint",
+        "dashboard":"Dashboard","chatbot":"Chatbot",
+        "title":"Digital Citizen Hub – Balochistan",
+        "subtitle":"AI-powered platform transforming governance.",
         "mission":"Automating complaints, tracking status, and enhancing transparency in government services.",
-        "submit_title":"Submit a Complaint","name":"Full Name","category":"Complaint Type","description":"Describe your issue",
-        "image":"Upload an optional image","submit_btn":"Submit Complaint","success":"✅ Your complaint has been submitted! Tracking ID:",
-        "track_title":"Track Your Complaint","track_input":"Enter your Complaint ID","track_btn":"Check Status",
-        "dashboard_title":"Transparency Dashboard","dashboard_desc":"Overview of complaints in the system.",
-        "footer":"Empowering governance through AI and transparency 🇵🇰","resolved_btn":"Mark as Resolved",
-        "priority":"Priority","status":"Status","department":"Department","role":"Select Role"
+        "submit_title":"Submit a Complaint","name":"Full Name",
+        "category":"Complaint Type","description":"Describe your issue",
+        "image":"Upload an optional image","submit_btn":"Submit Complaint",
+        "success":"✅ Your complaint has been submitted! Tracking ID:",
+        "track_title":"Track Your Complaint","track_input":"Enter your Complaint ID",
+        "track_btn":"Check Status","dashboard_title":"Transparency Dashboard",
+        "dashboard_desc":"Overview of complaints in the system.",
+        "footer":"Empowering governance through AI and transparency 🇵🇰",
+        "resolved_btn":"Mark as Resolved","priority":"Priority",
+        "status":"Status","department":"Department","role":"Select Role",
+        "admin_pass":"Enter Admin Password"
     },
     "اردو": {
-        "home":"ہوم","submit":"شکایت درج کریں","track":"شکایت ٹریک کریں","dashboard":"ڈیش بورڈ","chatbot":"چیٹ بوٹ",
-        "title":"ڈیجیٹل سٹیزن حب – بلوچستان","subtitle":"بلوچستان میں گورننس کو بہتر بنانے کے لیے مصنوعی ذہانت سے چلنے والا پلیٹ فارم۔",
+        "home":"ہوم","submit":"شکایت درج کریں","track":"شکایت ٹریک کریں",
+        "dashboard":"ڈیش بورڈ","chatbot":"چیٹ بوٹ",
+        "title":"ڈیجیٹل سٹیزن حب – بلوچستان",
+        "subtitle":"بلوچستان میں گورننس کو بہتر بنانے کے لیے مصنوعی ذہانت سے چلنے والا پلیٹ فارم۔",
         "mission":"شکایات کو خودکار کرنا، ان کی حالت ٹریک کرنا اور سرکاری خدمات میں شفافیت بڑھانا۔",
-        "submit_title":"شکایت درج کریں","name":"نام","category":"شکایت کی قسم","description":"مسئلہ بیان کریں",
-        "image":"اختیاری تصویر اپ لوڈ کریں","submit_btn":"شکایت جمع کریں","success":"✅ آپ کی شکایت موصول ہو گئی! ٹریکنگ آئی ڈی:",
-        "track_title":"شکایت ٹریک کریں","track_input":"اپنی شکایت کی آئی ڈی درج کریں","track_btn":"حالت چیک کریں",
-        "dashboard_title":"شفافیت کا ڈیش بورڈ","dashboard_desc":"سسٹم میں شکایات کا جائزہ۔",
-        "footer":"مصنوعی ذہانت اور شفافیت کے ذریعے گورننس کو مضبوط بنانا 🇵🇰","resolved_btn":"حل شدہ نشان زد کریں",
-        "priority":"اہمیت","status":"حالت","department":"ڈیپارٹمنٹ","role":"کردار منتخب کریں"
+        "submit_title":"شکایت درج کریں","name":"نام","category":"شکایت کی قسم",
+        "description":"مسئلہ بیان کریں","image":"اختیاری تصویر اپ لوڈ کریں",
+        "submit_btn":"شکایت جمع کریں",
+        "success":"✅ آپ کی شکایت موصول ہو گئی! ٹریکنگ آئی ڈی:",
+        "track_title":"شکایت ٹریک کریں","track_input":"اپنی شکایت کی آئی ڈی درج کریں",
+        "track_btn":"حالت چیک کریں","dashboard_title":"شفافیت کا ڈیش بورڈ",
+        "dashboard_desc":"سسٹم میں شکایات کا جائزہ۔",
+        "footer":"مصنوعی ذہانت اور شفافیت کے ذریعے گورننس کو مضبوط بنانا 🇵🇰",
+        "resolved_btn":"حل شدہ نشان زد کریں","priority":"اہمیت","status":"حالت",
+        "department":"ڈیپارٹمنٹ","role":"کردار منتخب کریں","admin_pass":"ایڈمن پاس ورڈ درج کریں"
     }
 }
 
 # --- Sidebar Role Selection ---
 role = st.sidebar.selectbox(text[lang]["role"], ["Citizen", "Admin"])
+
+# --- Admin authentication ---
+if role == "Admin":
+    admin_password = st.sidebar.text_input(text[lang]["admin_pass"], type="password")
+    if admin_password != "admin123":
+        st.error("Access Denied ❌")
+        st.stop()
 
 # --- Role-based Navigation ---
 if role == "Citizen":
@@ -97,7 +122,6 @@ department_mapping = {
 }
 
 # --- MAIN LOGIC ---
-
 if page == text[lang]["home"]:
     st.title(text[lang]["title"])
     st.subheader(text[lang]["subtitle"])
@@ -105,28 +129,42 @@ if page == text[lang]["home"]:
 
 elif page == text[lang]["submit"] and role == "Citizen":
     st.header(text[lang]["submit_title"])
+    
+    if lang == "اردو":
+        categories = ["بجلی", "پانی", "صحت", "سڑکیں", "صفائی", "دیگر"]
+    else:
+        categories = ["Electricity", "Water", "Health", "Roads", "Sanitation", "Other"]
+    
     with st.form("complaint_form"):
         name = st.text_input(text[lang]["name"])
-        # 🟢 Manual category selection
-        category = st.selectbox(
-            text[lang]["category"], 
-            ["Electricity", "Water", "Health", "Roads", "Sanitation", "Other"]
-        )
+        category = st.selectbox(text[lang]["category"], categories)
         description = st.text_area(text[lang]["description"], height=120)
         image = st.file_uploader(text[lang]["image"], type=["jpg", "jpeg", "png"])
         submitted = st.form_submit_button(text[lang]["submit_btn"])
 
         if submitted and name and description:
-            tracking_id = random.randint(1000, 9999)
-            dept = department_mapping.get(category, "Other")
+            tracking_id = int(pd.Timestamp.now().timestamp())  # unique ID
+            category_en = category if lang == "English" else {
+                "بجلی": "Electricity", "پانی": "Water", "صحت": "Health",
+                "سڑکیں": "Roads", "صفائی": "Sanitation", "دیگر": "Other"
+            }.get(category, "Other")
+            
+            dept = department_mapping.get(category_en, "Other")
             priority = detect_priority(description)
             sentiment = get_sentiment(description)
             status = "Pending"
 
+            if image:
+                image_path = os.path.join(UPLOAD_DIR, f"{tracking_id}_{image.name}")
+                with open(image_path, "wb") as f:
+                    f.write(image.getbuffer())
+            else:
+                image_path = None
+
             complaints_df = pd.concat([complaints_df, pd.DataFrame([{
-                "ID": tracking_id, "Name": name, "Category": category, "Department": dept,
-                "Priority": priority, "Status": status, "Description": description,
-                "Sentiment": sentiment, "Image": image.name if image else None
+                "ID": tracking_id, "Name": name, "Category": category_en,
+                "Department": dept, "Priority": priority, "Status": status,
+                "Description": description, "Sentiment": sentiment, "Image": image_path
             }])], ignore_index=True)
             complaints_df.to_csv(DATA_FILE, index=False)
 
@@ -145,7 +183,13 @@ elif page == text[lang]["track"] and role == "Citizen":
             except ValueError:
                 found = pd.DataFrame()
             if not found.empty:
-                st.success(f"{text[lang]['department']}: {found.iloc[0]['Department']}\n{text[lang]['status']}: {found.iloc[0]['Status']}\n{text[lang]['priority']}: {found.iloc[0]['Priority']}\nSentiment: {found.iloc[0]['Sentiment']}\nDescription: {found.iloc[0]['Description']}")
+                st.success(f"{text[lang]['department']}: {found.iloc[0]['Department']}\n"
+                           f"{text[lang]['status']}: {found.iloc[0]['Status']}\n"
+                           f"{text[lang]['priority']}: {found.iloc[0]['Priority']}\n"
+                           f"Sentiment: {found.iloc[0]['Sentiment']}\n"
+                           f"Description: {found.iloc[0]['Description']}")
+                if pd.notna(found.iloc[0]["Image"]) and os.path.exists(found.iloc[0]["Image"]):
+                    st.image(found.iloc[0]["Image"], caption="Attached Image", use_container_width=True)
             else:
                 st.warning("❌ Complaint not found!" if lang == "English" else "❌ شکایت موجود نہیں!")
         else:
@@ -168,7 +212,6 @@ elif page == text[lang]["dashboard"] and role == "Admin":
 
         st.subheader("📊 Visual Insights")
 
-        # 🟢 Added: Complaints by Category
         fig0 = px.pie(complaints_df, names="Category", title="Complaints by Category")
         st.plotly_chart(fig0, use_container_width=True)
 
@@ -178,6 +221,9 @@ elif page == text[lang]["dashboard"] and role == "Admin":
         fig2 = px.bar(complaints_df, x="Priority", color="Priority", title="Complaints by Priority")
         st.plotly_chart(fig2, use_container_width=True)
 
+        fig4 = px.pie(complaints_df, names="Sentiment", title="Complaints by Sentiment")
+        st.plotly_chart(fig4, use_container_width=True)
+
         complaints_df["ResolvedFlag"] = complaints_df["Status"].apply(lambda x: 1 if x.lower() == "resolved" else 0)
         fig3 = px.line(complaints_df.groupby("Priority")["ResolvedFlag"].mean().reset_index(),
                        x="Priority", y="ResolvedFlag", title="Resolution Rate by Priority")
@@ -186,6 +232,7 @@ elif page == text[lang]["dashboard"] and role == "Admin":
         st.subheader("🧑‍💼 Resolve Complaint")
         resolve_id = st.number_input("Enter Complaint ID to resolve", min_value=0, step=1)
         if st.button(text[lang]["resolved_btn"]):
+            complaints_df = pd.read_csv(DATA_FILE)  # reload for safety
             idx = complaints_df[complaints_df["ID"] == resolve_id].index
             if len(idx) > 0:
                 complaints_df.at[idx[0], "Status"] = "Resolved"
