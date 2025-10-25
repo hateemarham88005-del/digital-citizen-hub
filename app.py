@@ -15,7 +15,7 @@ DATA_FILE = "complaints.csv"
 if os.path.exists(DATA_FILE):
     complaints_df = pd.read_csv(DATA_FILE)
 else:
-    complaints_df = pd.DataFrame(columns=["ID", "Name", "Category", "Department", "Priority", "Status", "Description", "Sentiment"])
+    complaints_df = pd.DataFrame(columns=["ID", "Name", "Category", "Department", "Priority", "Status", "Description", "Sentiment", "Image"])
 
 # --- CSS Styling ---
 st.markdown("""
@@ -59,12 +59,18 @@ text = {
     }
 }
 
-# --- Sidebar Role & Navigation ---
+# --- Sidebar Role Selection ---
 role = st.sidebar.selectbox(text[lang]["role"], ["Citizen", "Admin"])
-page = st.sidebar.radio("Navigate",
-                        [text[lang]["home"], text[lang]["submit"], text[lang]["track"], text[lang]["dashboard"], text[lang]["chatbot"]])
 
-# --- Helper: Category & Priority Detection ---
+# --- Role-based Navigation ---
+if role == "Citizen":
+    nav_options = [text[lang]["home"], text[lang]["submit"], text[lang]["track"], text[lang]["chatbot"]]
+else:
+    nav_options = [text[lang]["home"], text[lang]["dashboard"], text[lang]["chatbot"]]
+
+page = st.sidebar.radio("Navigate", nav_options)
+
+# --- Helper: Category, Priority, Sentiment ---
 def categorize_complaint(text_input):
     text_input = text_input.lower()
     if any(word in text_input for word in ["electricity", "power", "load", "bill"]):
@@ -98,7 +104,8 @@ def get_sentiment(text_input):
 # --- Department mapping ---
 department_mapping = {"Electricity": "QESCO", "Water": "Water Board", "Health": "Health Dept", "Roads": "Public Works", "Sanitation": "Municipal"}
 
-# --- MAIN PAGES ---
+# --- MAIN LOGIC ---
+
 if page == text[lang]["home"]:
     st.title(text[lang]["title"])
     st.subheader(text[lang]["subtitle"])
@@ -109,6 +116,7 @@ elif page == text[lang]["submit"] and role == "Citizen":
     with st.form("complaint_form"):
         name = st.text_input(text[lang]["name"])
         description = st.text_area(text[lang]["description"], height=120)
+        image = st.file_uploader(text[lang]["image"], type=["jpg", "jpeg", "png"])
         submitted = st.form_submit_button(text[lang]["submit_btn"])
 
         if submitted and name and description:
@@ -120,7 +128,8 @@ elif page == text[lang]["submit"] and role == "Citizen":
             status = "Pending"
             complaints_df = pd.concat([complaints_df, pd.DataFrame([{
                 "ID": tracking_id, "Name": name, "Category": category, "Department": dept,
-                "Priority": priority, "Status": status, "Description": description, "Sentiment": sentiment
+                "Priority": priority, "Status": status, "Description": description,
+                "Sentiment": sentiment, "Image": image.name if image else None
             }])], ignore_index=True)
             complaints_df.to_csv(DATA_FILE, index=False)
             st.success(f"{text[lang]['success']} #{tracking_id}\n{text[lang]['department']}: {dept}\n{text[lang]['priority']}: {priority}")
@@ -152,12 +161,12 @@ elif page == text[lang]["dashboard"] and role == "Admin":
         total = len(complaints_df)
         resolved = len(complaints_df[complaints_df["Status"] == "Resolved"])
         pending = total - resolved
+
         col1, col2, col3 = st.columns(3)
         col1.metric("Total Complaints", total)
         col2.metric("Resolved", resolved)
         col3.metric("Pending", pending)
 
-        # --- Visualization Charts ---
         st.subheader("📊 Visual Insights")
         fig1 = px.pie(complaints_df, names="Department", title="Complaints by Department")
         st.plotly_chart(fig1, use_container_width=True)
@@ -165,13 +174,11 @@ elif page == text[lang]["dashboard"] and role == "Admin":
         fig2 = px.bar(complaints_df, x="Priority", color="Priority", title="Complaints by Priority")
         st.plotly_chart(fig2, use_container_width=True)
 
-        if "Status" in complaints_df.columns:
-            complaints_df["ResolvedFlag"] = complaints_df["Status"].apply(lambda x: 1 if x.lower() == "resolved" else 0)
-            fig3 = px.line(complaints_df.groupby("Priority")["ResolvedFlag"].mean().reset_index(),
-                           x="Priority", y="ResolvedFlag", title="Resolution Rate by Priority")
-            st.plotly_chart(fig3, use_container_width=True)
+        complaints_df["ResolvedFlag"] = complaints_df["Status"].apply(lambda x: 1 if x.lower() == "resolved" else 0)
+        fig3 = px.line(complaints_df.groupby("Priority")["ResolvedFlag"].mean().reset_index(),
+                       x="Priority", y="ResolvedFlag", title="Resolution Rate by Priority")
+        st.plotly_chart(fig3, use_container_width=True)
 
-        # --- Resolve Complaint ---
         st.subheader("🧑‍💼 Resolve Complaint")
         resolve_id = st.number_input("Enter Complaint ID to resolve", min_value=0, step=1)
         if st.button(text[lang]["resolved_btn"]):
@@ -206,4 +213,3 @@ elif page == text[lang]["chatbot"]:
 
 st.write("---")
 st.markdown(f"**{text[lang]['footer']}**")
-
