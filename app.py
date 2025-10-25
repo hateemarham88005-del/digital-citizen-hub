@@ -7,7 +7,7 @@ from textblob import TextBlob
 # --- Page config ---
 st.set_page_config(
     page_title="Digital Citizen Hub - Balochistan", 
-    page_icon="🏛️", 
+    page_icon="🌐", 
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -26,161 +26,194 @@ else:
         "Status", "Description", "Sentiment", "Image"
     ])
 
-# --- Professional CSS Styling ---
+# --- Modern Smooth CSS ---
 st.markdown("""
 <style>
     /* Main styling */
     .main {
         background-color: #ffffff;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
     }
     
     .main .block-container {
-        padding-top: 2rem;
+        padding-top: 0rem;
         max-width: 1200px;
     }
     
-    /* Professional Headers */
+    /* Smooth Headers */
     .main-header {
-        font-size: 2.5rem;
-        font-weight: 600;
-        color: #1a202c;
+        font-size: 3.5rem;
+        font-weight: 700;
+        color: #000000;
         text-align: center;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1rem;
-        border-bottom: 2px solid #e2e8f0;
+        margin-bottom: 1rem;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
     }
     
-    .section-header {
-        font-size: 1.5rem;
+    .sub-header {
+        font-size: 1.4rem;
+        color: #666666;
+        text-align: center;
+        margin-bottom: 3rem;
+        font-weight: 400;
+        line-height: 1.5;
+    }
+    
+    .mission-text {
+        font-size: 1.1rem;
+        color: #444444;
+        text-align: center;
+        margin: 2rem 0;
+        line-height: 1.6;
+        max-width: 800px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    
+    /* Action Buttons */
+    .action-container {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        margin: 3rem 0;
+        flex-wrap: wrap;
+    }
+    
+    .action-button {
+        background: #000000;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 1.2rem 2.5rem;
         font-weight: 600;
-        color: #2d3748;
-        margin-bottom: 1.5rem;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+        text-align: center;
+        min-width: 200px;
+    }
+    
+    .action-button:hover {
+        background: #333333;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    }
+    
+    /* Feature Cards */
+    .features-section {
+        margin: 4rem 0;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+        font-weight: 600;
+        color: #000000;
+        text-align: center;
+        margin-bottom: 2rem;
     }
     
     /* Clean Cards */
-    .custom-card {
-        background: #ffffff;
-        border-radius: 8px;
-        padding: 2rem;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        margin-bottom: 1.5rem;
-    }
-    
-    /* Professional Metrics */
-    .metric-card {
-        background: #f7fafc;
-        border-radius: 8px;
-        padding: 1.5rem;
-        text-align: center;
-        border: 1px solid #e2e8f0;
-    }
-    
-    .metric-value {
-        font-size: 2rem;
-        font-weight: 600;
-        color: #2d3748;
-        margin-bottom: 0.5rem;
-    }
-    
-    .metric-label {
-        font-size: 0.9rem;
-        color: #718096;
-        font-weight: 500;
-    }
-    
-    /* Professional Buttons */
-    .stButton button {
-        background-color: #2b6cb0;
-        color: white;
-        border: none;
-        border-radius: 6px;
-        padding: 0.75rem 1.5rem;
-        font-weight: 500;
-        width: 100%;
-        font-size: 0.9rem;
-    }
-    
-    .stButton button:hover {
-        background-color: #2c5282;
+    .clean-card {
+        background: white;
+        border-radius: 12px;
+        padding: 2.5rem;
+        border: 1px solid #f0f0f0;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        margin-bottom: 2rem;
     }
     
     /* Form Styling */
     .stTextInput input, .stTextArea textarea, .stSelectbox select {
-        border-radius: 6px;
-        border: 1px solid #cbd5e0;
+        border-radius: 8px;
+        border: 1px solid #e0e0e0;
         padding: 0.75rem;
-        font-size: 0.9rem;
+        font-size: 1rem;
     }
     
     .stTextInput input:focus, .stTextArea textarea:focus, .stSelectbox select:focus {
-        border-color: #2b6cb0;
-        box-shadow: 0 0 0 1px #2b6cb0;
+        border-color: #000000;
+        box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
     }
     
-    /* Status Badges */
+    /* Buttons */
+    .stButton button {
+        background: #000000;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        padding: 0.875rem 2rem;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        width: 100%;
+    }
+    
+    .stButton button:hover {
+        background: #333333;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    
+    /* Status badges */
     .status-pending { 
-        background: #fffaf0; 
-        color: #dd6b20; 
-        padding: 0.4rem 0.8rem; 
-        border-radius: 4px; 
+        background: #fff3cd; 
+        color: #856404; 
+        padding: 0.4rem 1rem; 
+        border-radius: 20px; 
         font-weight: 500; 
         font-size: 0.8rem;
-        border: 1px solid #fed7aa;
     }
     .status-resolved { 
-        background: #f0fff4; 
-        color: #38a169; 
-        padding: 0.4rem 0.8rem; 
-        border-radius: 4px; 
+        background: #d4edda; 
+        color: #155724; 
+        padding: 0.4rem 1rem; 
+        border-radius: 20px; 
         font-weight: 500; 
         font-size: 0.8rem;
-        border: 1px solid #9ae6b4;
     }
     .status-high { 
-        background: #fed7d7; 
-        color: #c53030; 
-        padding: 0.4rem 0.8rem; 
-        border-radius: 4px; 
+        background: #f8d7da; 
+        color: #721c24; 
+        padding: 0.4rem 1rem; 
+        border-radius: 20px; 
         font-weight: 500; 
         font-size: 0.8rem;
-        border: 1px solid #fc8181;
     }
     .status-medium { 
-        background: #feebc8; 
-        color: #dd6b20; 
-        padding: 0.4rem 0.8rem; 
-        border-radius: 4px; 
+        background: #fff3cd; 
+        color: #856404; 
+        padding: 0.4rem 1rem; 
+        border-radius: 20px; 
         font-weight: 500; 
         font-size: 0.8rem;
-        border: 1px solid #fbd38d;
     }
     .status-low { 
-        background: #c6f6d5; 
-        color: #38a169; 
-        padding: 0.4rem 0.8rem; 
-        border-radius: 4px; 
+        background: #d1ecf1; 
+        color: #0c5460; 
+        padding: 0.4rem 1rem; 
+        border-radius: 20px; 
         font-weight: 500; 
         font-size: 0.8rem;
-        border: 1px solid #9ae6b4;
     }
     
-    /* Sidebar */
-    .css-1d391kg {
-        background: #f7fafc;
-        border-right: 1px solid #e2e8f0;
-    }
+    /* Hide Streamlit elements */
+    #MainMenu {visibility: hidden;}
+    footer {visibility: hidden;}
+    header {visibility: hidden;}
     
-    /* Table Styling */
-    .dataframe {
-        font-size: 0.9rem;
+    /* Smooth transitions */
+    .element-container {
+        transition: all 0.3s ease;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # --- Language Selector ---
 st.sidebar.markdown("---")
-lang = st.sidebar.radio("Language", ["English", "اردو"])
+lang = st.sidebar.radio("Language / زبان", ["English", "اردو"])
 
 # --- Text dictionary ---
 text = {
@@ -190,29 +223,29 @@ text = {
         "track": "Track Complaint",
         "dashboard": "Dashboard", 
         "chatbot": "Assistant",
-        "title": "Digital Citizen Hub - Balochistan",
-        "subtitle": "Public Service Complaint Management System",
-        "mission": "Streamlining citizen-government communication through digital innovation",
-        "submit_title": "Submit Complaint", 
+        "title": "Digital Citizen Hub – Balochistan",
+        "subtitle": "AI-powered platform transforming governance",
+        "mission": "Automating complaints, tracking status, and enhancing transparency in government services.",
+        "submit_title": "Submit a Complaint", 
         "name": "Full Name",
-        "category": "Complaint Category", 
-        "description": "Issue Description",
-        "image": "Attach Image (Optional)", 
+        "category": "Complaint Type", 
+        "description": "Describe your issue",
+        "image": "Upload an optional image", 
         "submit_btn": "Submit Complaint",
-        "success": "Complaint submitted successfully. Tracking ID:",
-        "track_title": "Track Complaint", 
-        "track_input": "Enter Complaint ID",
+        "success": "Your complaint has been submitted! Tracking ID:",
+        "track_title": "Track Your Complaint", 
+        "track_input": "Enter your Complaint ID",
         "track_btn": "Check Status", 
-        "dashboard_title": "Administrative Dashboard",
-        "dashboard_desc": "Complaint management and analytics",
-        "footer": "Government of Balochistan - Digital Transformation Initiative",
+        "dashboard_title": "Transparency Dashboard",
+        "dashboard_desc": "Overview of complaints in the system.",
+        "footer": "Empowering governance through AI and transparency",
         "resolved_btn": "Mark as Resolved", 
-        "priority": "Priority Level",
-        "status": "Current Status", 
-        "department": "Responsible Department", 
+        "priority": "Priority",
+        "status": "Status", 
+        "department": "Department", 
         "role": "Select Role",
-        "admin_pass": "Administrator Password",
-        "stats_title": "System Overview"
+        "admin_pass": "Enter Admin Password",
+        "features": "Platform Features"
     },
     "اردو": {
         "home": "ہوم",
@@ -220,42 +253,41 @@ text = {
         "track": "شکایت ٹریک کریں",
         "dashboard": "ڈیش بورڈ", 
         "chatbot": "معاون",
-        "title": "ڈیجیٹل سٹیزن حب - بلوچستان",
-        "subtitle": "عوامی خدمات کی شکایت مینجمنٹ سسٹم",
-        "mission": "ڈیجیٹل اختراع کے ذریعے شہری-حکومت مواصلات کو بہتر بنانا",
+        "title": "ڈیجیٹل سٹیزن حب – بلوچستان",
+        "subtitle": "بلوچستان میں گورننس کو بہتر بنانے کے لیے مصنوعی ذہانت سے چلنے والا پلیٹ فارم۔",
+        "mission": "شکایات کو خودکار کرنا، ان کی حالت ٹریک کرنا اور سرکاری خدمات میں شفافیت بڑھانا۔",
         "submit_title": "شکایت درج کریں", 
-        "name": "مکمل نام",
+        "name": "نام",
         "category": "شکایت کی قسم", 
-        "description": "مسئلے کی تفصیل",
-        "image": "تصویر منسلک کریں (اختیاری)", 
+        "description": "مسئلہ بیان کریں",
+        "image": "اختیاری تصویر اپ لوڈ کریں", 
         "submit_btn": "شکایت جمع کریں",
-        "success": "شکایت کامیابی سے جمع ہو گئی۔ ٹریکنگ آئی ڈی:",
+        "success": "آپ کی شکایت موصول ہو گئی! ٹریکنگ آئی ڈی:",
         "track_title": "شکایت ٹریک کریں", 
-        "track_input": "شکایت کی آئی ڈی درج کریں",
+        "track_input": "اپنی شکایت کی آئی ڈی درج کریں",
         "track_btn": "حالت چیک کریں", 
-        "dashboard_title": "ایڈمنسٹریٹو ڈیش بورڈ",
-        "dashboard_desc": "شکایت مینجمنٹ اور تجزیات",
-        "footer": "حکومت بلوچستان - ڈیجیٹل تبدیلی کا اقدام",
-        "resolved_btn": "حل شدہ قرار دیں", 
-        "priority": "ترجیحی سطح",
-        "status": "موجودہ حالت", 
-        "department": "ذمہ دار محکمہ", 
+        "dashboard_title": "شفافیت کا ڈیش بورڈ",
+        "dashboard_desc": "سسٹم میں شکایات کا جائزہ۔",
+        "footer": "مصنوعی ذہانت اور شفافیت کے ذریعے گورننس کو مضبوط بنانا",
+        "resolved_btn": "حل شدہ نشان زد کریں", 
+        "priority": "اہمیت",
+        "status": "حالت", 
+        "department": "ڈیپارٹمنٹ", 
         "role": "کردار منتخب کریں",
-        "admin_pass": "ایڈمنسٹریٹر پاس ورڈ",
-        "stats_title": "سسٹم کا جائزہ"
+        "admin_pass": "ایڈمن پاس ورڈ درج کریں",
+        "features": "پلیٹ فارم کی خصوصیات"
     }
 }
 
 # --- Role Selection ---
 st.sidebar.markdown("---")
-role = st.sidebar.selectbox(text[lang]["role"], ["Citizen", "Administrator"])
+role = st.sidebar.selectbox(text[lang]["role"], ["Citizen", "Admin"])
 
 # --- Admin authentication ---
-if role == "Administrator":
-    st.sidebar.markdown("---")
+if role == "Admin":
     admin_password = st.sidebar.text_input(text[lang]["admin_pass"], type="password")
     if admin_password != "admin123":
-        st.error("Access Denied - Invalid Credentials")
+        st.error("Access Denied")
         st.stop()
 
 # --- Navigation ---
@@ -265,7 +297,7 @@ if role == "Citizen":
 else:
     nav_options = [text[lang]["home"], text[lang]["dashboard"], text[lang]["chatbot"]]
 
-page = st.sidebar.radio("Navigation", nav_options)
+page = st.sidebar.radio("Navigate", nav_options)
 
 # --- Helper Functions ---
 def detect_priority(text_input):
@@ -300,37 +332,63 @@ def create_status_badge(status, priority=None):
 department_mapping = {
     "Electricity": "QESCO", 
     "Water": "Water Board", 
-    "Health": "Health Department", 
+    "Health": "Health Dept", 
     "Roads": "Public Works", 
-    "Sanitation": "Municipal Services",
-    "Other": "General Administration"
+    "Sanitation": "Municipal",
+    "Other": "General Affairs"
 }
 
 # --- MAIN LOGIC ---
 if page == text[lang]["home"]:
+    # Hero Section
     st.markdown(f'<h1 class="main-header">{text[lang]["title"]}</h1>', unsafe_allow_html=True)
-    st.markdown(f'<p style="text-align: center; color: #4a5568; font-size: 1.1rem; margin-bottom: 3rem;">{text[lang]["subtitle"]}</p>', unsafe_allow_html=True)
+    st.markdown(f'<div class="sub-header">{text[lang]["subtitle"]}</div>', unsafe_allow_html=True)
+    st.markdown(f'<div class="mission-text">{text[lang]["mission"]}</div>', unsafe_allow_html=True)
     
-    # Stats Section
-    if not complaints_df.empty:
-        total = len(complaints_df)
-        resolved = len(complaints_df[complaints_df["Status"] == "Resolved"])
-        pending = total - resolved
-        
-        st.markdown(f'<div class="section-header">{text[lang]["stats_title"]}</div>', unsafe_allow_html=True)
-        col1, col2, col3 = st.columns(3)
-        
-        with col1:
-            st.markdown(f'<div class="metric-card"><div class="metric-value">{total}</div><div class="metric-label">Total Complaints</div></div>', unsafe_allow_html=True)
-        with col2:
-            st.markdown(f'<div class="metric-card"><div class="metric-value">{resolved}</div><div class="metric-label">Resolved</div></div>', unsafe_allow_html=True)
-        with col3:
-            st.markdown(f'<div class="metric-card"><div class="metric-value">{pending}</div><div class="metric-label">Pending</div></div>', unsafe_allow_html=True)
+    # Action Buttons
+    st.markdown("""
+    <div class="action-container">
+        <a href="?nav=Submit Complaint" class="action-button">Submit Complaint</a>
+        <a href="?nav=Track Complaint" class="action-button">Track Complaint</a>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    # Divider
+    st.markdown("---")
+    
+    # Features Section
+    st.markdown(f'<div class="section-title">{text[lang]["features"]}</div>', unsafe_allow_html=True)
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.markdown("""
+        <div style="text-align: center; padding: 2rem;">
+            <h3 style="color: #000000; margin-bottom: 1rem;">AI-Powered</h3>
+            <p style="color: #666666;">Smart complaint categorization and priority detection using artificial intelligence.</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col2:
+        st.markdown("""
+        <div style="text-align: center; padding: 2rem;">
+            <h3 style="color: #000000; margin-bottom: 1rem;">Real-time Tracking</h3>
+            <p style="color: #666666;">Monitor your complaint status in real-time with transparent updates.</p>
+        </div>
+        """, unsafe_allow_html=True)
+    
+    with col3:
+        st.markdown("""
+        <div style="text-align: center; padding: 2rem;">
+            <h3 style="color: #000000; margin-bottom: 1rem;">Multi-department</h3>
+            <p style="color: #666666;">Integrated system connecting all government departments for efficient resolution.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 elif page == text[lang]["submit"] and role == "Citizen":
     st.markdown(f'<h1 class="main-header">{text[lang]["submit_title"]}</h1>', unsafe_allow_html=True)
     
-    st.markdown('<div class="custom-card">', unsafe_allow_html=True)
+    st.markdown('<div class="clean-card">', unsafe_allow_html=True)
     
     if lang == "اردو":
         categories = ["بجلی", "پانی", "صحت", "سڑکیں", "صفائی", "دیگر"]
@@ -386,7 +444,7 @@ elif page == text[lang]["submit"] and role == "Citizen":
 elif page == text[lang]["track"] and role == "Citizen":
     st.markdown(f'<h1 class="main-header">{text[lang]["track_title"]}</h1>', unsafe_allow_html=True)
     
-    st.markdown('<div class="custom-card">', unsafe_allow_html=True)
+    st.markdown('<div class="clean-card">', unsafe_allow_html=True)
     
     complaint_id = st.text_input(text[lang]["track_input"])
     
@@ -418,7 +476,7 @@ elif page == text[lang]["track"] and role == "Citizen":
                 
     st.markdown("</div>", unsafe_allow_html=True)
 
-elif page == text[lang]["dashboard"] and role == "Administrator":
+elif page == text[lang]["dashboard"] and role == "Admin":
     st.markdown(f'<h1 class="main-header">{text[lang]["dashboard_title"]}</h1>', unsafe_allow_html=True)
     
     if not complaints_df.empty:
@@ -429,18 +487,18 @@ elif page == text[lang]["dashboard"] and role == "Administrator":
         
         col1, col2, col3, col4 = st.columns(4)
         with col1:
-            st.markdown(f'<div class="metric-card"><div class="metric-value">{total}</div><div class="metric-label">Total</div></div>', unsafe_allow_html=True)
+            st.metric("Total Complaints", total)
         with col2:
-            st.markdown(f'<div class="metric-card"><div class="metric-value">{resolved}</div><div class="metric-label">Resolved</div></div>', unsafe_allow_html=True)
+            st.metric("Resolved", resolved)
         with col3:
-            st.markdown(f'<div class="metric-card"><div class="metric-value">{pending}</div><div class="metric-label">Pending</div></div>', unsafe_allow_html=True)
+            st.metric("Pending", pending)
         with col4:
             high_priority = len(complaints_df[complaints_df["Priority"] == "High"])
-            st.markdown(f'<div class="metric-card"><div class="metric-value">{high_priority}</div><div class="metric-label">High Priority</div></div>', unsafe_allow_html=True)
+            st.metric("High Priority", high_priority)
         
         # Charts
-        st.markdown('<div class="custom-card">', unsafe_allow_html=True)
-        st.markdown('<div class="section-header">Analytics</div>', unsafe_allow_html=True)
+        st.markdown('<div class="clean-card">', unsafe_allow_html=True)
+        st.subheader("Visual Insights")
         
         col1, col2 = st.columns(2)
         
@@ -455,33 +513,33 @@ elif page == text[lang]["dashboard"] and role == "Administrator":
         st.markdown("</div>", unsafe_allow_html=True)
         
         # Data Table
-        st.markdown('<div class="custom-card">', unsafe_allow_html=True)
-        st.markdown('<div class="section-header">Complaint Records</div>', unsafe_allow_html=True)
+        st.markdown('<div class="clean-card">', unsafe_allow_html=True)
+        st.subheader("Complaint Records")
         st.dataframe(complaints_df, use_container_width=True)
         st.markdown("</div>", unsafe_allow_html=True)
         
         # Resolution
-        st.markdown('<div class="custom-card">', unsafe_allow_html=True)
-        st.markdown('<div class="section-header">Complaint Resolution</div>', unsafe_allow_html=True)
-        resolve_id = st.number_input("Complaint ID to resolve", min_value=0, step=1)
+        st.markdown('<div class="clean-card">', unsafe_allow_html=True)
+        st.subheader("Complaint Resolution")
+        resolve_id = st.number_input("Enter Complaint ID to resolve", min_value=0, step=1)
         if st.button(text[lang]["resolved_btn"]):
             complaints_df = pd.read_csv(DATA_FILE)
             idx = complaints_df[complaints_df["ID"] == resolve_id].index
             if len(idx) > 0:
                 complaints_df.at[idx[0], "Status"] = "Resolved"
                 complaints_df.to_csv(DATA_FILE, index=False)
-                st.success(f"Complaint #{resolve_id} resolved")
+                st.success(f"Complaint #{resolve_id} marked as Resolved")
             else:
                 st.error("Complaint not found")
         st.markdown("</div>", unsafe_allow_html=True)
         
     else:
-        st.info("No complaints in the system")
+        st.info("No complaints submitted yet.")
 
 elif page == text[lang]["chatbot"]:
-    st.markdown(f'<h1 class="main-header">Virtual Assistant</h1>', unsafe_allow_html=True)
+    st.markdown(f'<h1 class="main-header">Digital Citizen Hub Assistant</h1>', unsafe_allow_html=True)
     
-    st.markdown('<div class="custom-card">', unsafe_allow_html=True)
+    st.markdown('<div class="clean-card">', unsafe_allow_html=True)
     st.write("How can I assist you today?")
     
     user_input = st.text_input("Your question:")
@@ -502,4 +560,4 @@ elif page == text[lang]["chatbot"]:
 
 # Footer
 st.markdown("---")
-st.markdown(f'<div style="text-align: center; color: #718096; padding: 2rem;">{text[lang]["footer"]}</div>', unsafe_allow_html=True)
+st.markdown(f'<div style="text-align: center; color: #666666; padding: 2rem;">{text[lang]["footer"]}</div>', unsafe_allow_html=True)
