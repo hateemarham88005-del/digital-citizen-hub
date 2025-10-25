@@ -70,22 +70,7 @@ else:
 
 page = st.sidebar.radio("Navigate", nav_options)
 
-# --- Helper: Category, Priority, Sentiment ---
-def categorize_complaint(text_input):
-    text_input = text_input.lower()
-    if any(word in text_input for word in ["electricity", "power", "load", "bill"]):
-        return "Electricity"
-    elif any(word in text_input for word in ["water", "pipe", "leak", "supply"]):
-        return "Water"
-    elif any(word in text_input for word in ["hospital", "doctor", "medicine", "health"]):
-        return "Health"
-    elif any(word in text_input for word in ["road", "street", "traffic", "bridge"]):
-        return "Roads"
-    elif any(word in text_input for word in ["waste", "garbage", "trash", "clean"]):
-        return "Sanitation"
-    else:
-        return "Other"
-
+# --- Helper Functions ---
 def detect_priority(text_input):
     text_input = text_input.lower()
     if any(word in text_input for word in ["urgent", "immediately", "danger", "fire", "flood"]):
@@ -102,7 +87,14 @@ def get_sentiment(text_input):
     else: return "Neutral"
 
 # --- Department mapping ---
-department_mapping = {"Electricity": "QESCO", "Water": "Water Board", "Health": "Health Dept", "Roads": "Public Works", "Sanitation": "Municipal"}
+department_mapping = {
+    "Electricity": "QESCO", 
+    "Water": "Water Board", 
+    "Health": "Health Dept", 
+    "Roads": "Public Works", 
+    "Sanitation": "Municipal",
+    "Other": "General Affairs"
+}
 
 # --- MAIN LOGIC ---
 
@@ -115,23 +107,29 @@ elif page == text[lang]["submit"] and role == "Citizen":
     st.header(text[lang]["submit_title"])
     with st.form("complaint_form"):
         name = st.text_input(text[lang]["name"])
+        # 🟢 Manual category selection
+        category = st.selectbox(
+            text[lang]["category"], 
+            ["Electricity", "Water", "Health", "Roads", "Sanitation", "Other"]
+        )
         description = st.text_area(text[lang]["description"], height=120)
         image = st.file_uploader(text[lang]["image"], type=["jpg", "jpeg", "png"])
         submitted = st.form_submit_button(text[lang]["submit_btn"])
 
         if submitted and name and description:
             tracking_id = random.randint(1000, 9999)
-            category = categorize_complaint(description)
             dept = department_mapping.get(category, "Other")
             priority = detect_priority(description)
             sentiment = get_sentiment(description)
             status = "Pending"
+
             complaints_df = pd.concat([complaints_df, pd.DataFrame([{
                 "ID": tracking_id, "Name": name, "Category": category, "Department": dept,
                 "Priority": priority, "Status": status, "Description": description,
                 "Sentiment": sentiment, "Image": image.name if image else None
             }])], ignore_index=True)
             complaints_df.to_csv(DATA_FILE, index=False)
+
             st.success(f"{text[lang]['success']} #{tracking_id}\n{text[lang]['department']}: {dept}\n{text[lang]['priority']}: {priority}")
         elif submitted:
             st.warning("⚠️ Please fill all fields!" if lang == "English" else "⚠️ تمام خانے پُر کریں!")
@@ -156,6 +154,7 @@ elif page == text[lang]["track"] and role == "Citizen":
 elif page == text[lang]["dashboard"] and role == "Admin":
     st.header(text[lang]["dashboard_title"])
     st.write(text[lang]["dashboard_desc"])
+
     if not complaints_df.empty:
         st.dataframe(complaints_df)
         total = len(complaints_df)
@@ -168,6 +167,11 @@ elif page == text[lang]["dashboard"] and role == "Admin":
         col3.metric("Pending", pending)
 
         st.subheader("📊 Visual Insights")
+
+        # 🟢 Added: Complaints by Category
+        fig0 = px.pie(complaints_df, names="Category", title="Complaints by Category")
+        st.plotly_chart(fig0, use_container_width=True)
+
         fig1 = px.pie(complaints_df, names="Department", title="Complaints by Department")
         st.plotly_chart(fig1, use_container_width=True)
 
