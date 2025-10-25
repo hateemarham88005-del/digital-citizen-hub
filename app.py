@@ -29,184 +29,114 @@ else:
 # --- Modern Smooth CSS ---
 st.markdown("""
 <style>
-    /* Main styling */
     .main {
-        background-color: #ffffff;
+        background: linear-gradient(135deg, #f4f7fb 0%, #e8eef6 100%);
         font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        color: #1e293b;
     }
-    
-    .main .block-container {
-        padding-top: 0rem;
-        max-width: 1200px;
-    }
-    
-    /* Smooth Headers */
+
     .main-header {
-        font-size: 3.5rem;
+        font-size: 3rem;
         font-weight: 700;
-        color: #000000;
+        color: #1e40af;
         text-align: center;
         margin-bottom: 1rem;
-        line-height: 1.1;
-        letter-spacing: -0.02em;
+        animation: fadeIn 1.5s ease-in;
     }
-    
+
     .sub-header {
-        font-size: 1.4rem;
-        color: #666666;
+        font-size: 1.3rem;
+        color: #475569;
         text-align: center;
-        margin-bottom: 3rem;
-        font-weight: 400;
-        line-height: 1.5;
+        margin-bottom: 2rem;
+        animation: slideUp 1.2s ease-in;
     }
-    
+
     .mission-text {
-        font-size: 1.1rem;
-        color: #444444;
+        background: white;
+        border-left: 5px solid #3b82f6;
+        border-radius: 12px;
+        padding: 1.5rem;
         text-align: center;
-        margin: 2rem 0;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        margin-bottom: 2rem;
+        font-size: 1rem;
         line-height: 1.6;
-        max-width: 800px;
-        margin-left: auto;
-        margin-right: auto;
+        animation: fadeIn 2s ease;
     }
-    
-    /* Action Buttons */
+
     .action-container {
         display: flex;
         justify-content: center;
         gap: 1.5rem;
         margin: 3rem 0;
-        flex-wrap: wrap;
     }
-    
+
     .action-button {
-        background: #000000;
+        background: linear-gradient(90deg, #2563eb, #1e40af);
         color: white;
         border: none;
-        border-radius: 10px;
-        padding: 1.2rem 2.5rem;
+        border-radius: 50px;
+        padding: 1rem 2rem;
         font-weight: 600;
         font-size: 1.1rem;
         cursor: pointer;
         transition: all 0.3s ease;
-        text-decoration: none;
-        display: inline-block;
-        text-align: center;
-        min-width: 200px;
+        box-shadow: 0 6px 20px rgba(37,99,235,0.25);
     }
-    
+
     .action-button:hover {
-        background: #333333;
-        transform: translateY(-2px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        transform: scale(1.05);
+        box-shadow: 0 8px 30px rgba(37,99,235,0.4);
     }
-    
-    /* Feature Cards */
-    .features-section {
-        margin: 4rem 0;
-    }
-    
-    .section-title {
-        font-size: 2rem;
-        font-weight: 600;
-        color: #000000;
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-    
-    /* Clean Cards */
+
     .clean-card {
         background: white;
-        border-radius: 12px;
-        padding: 2.5rem;
-        border: 1px solid #f0f0f0;
-        box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        border-radius: 15px;
+        padding: 2rem;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        transition: transform 0.2s ease;
+    }
+
+    .clean-card:hover {
+        transform: translateY(-4px);
+    }
+
+    .section-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: #1e40af;
+        text-align: center;
         margin-bottom: 2rem;
     }
-    
-    /* Form Styling */
-    .stTextInput input, .stTextArea textarea, .stSelectbox select {
-        border-radius: 8px;
-        border: 1px solid #e0e0e0;
-        padding: 0.75rem;
-        font-size: 1rem;
-    }
-    
-    .stTextInput input:focus, .stTextArea textarea:focus, .stSelectbox select:focus {
-        border-color: #000000;
-        box-shadow: 0 0 0 2px rgba(0,0,0,0.1);
-    }
-    
-    /* Buttons */
+
     .stButton button {
-        background: #000000;
+        background: linear-gradient(90deg, #3b82f6, #1e40af);
         color: white;
         border: none;
         border-radius: 8px;
-        padding: 0.875rem 2rem;
+        padding: 0.9rem 2rem;
         font-weight: 600;
         font-size: 1rem;
         transition: all 0.3s ease;
-        width: 100%;
     }
-    
+
     .stButton button:hover {
-        background: #333333;
-        transform: translateY(-1px);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        background: linear-gradient(90deg, #2563eb, #1d4ed8);
+        transform: scale(1.03);
+        box-shadow: 0 6px 20px rgba(37,99,235,0.3);
     }
-    
-    /* Status badges */
-    .status-pending { 
-        background: #fff3cd; 
-        color: #856404; 
-        padding: 0.4rem 1rem; 
-        border-radius: 20px; 
-        font-weight: 500; 
-        font-size: 0.8rem;
+
+    /* Animations */
+    @keyframes fadeIn {
+        from {opacity: 0; transform: translateY(20px);}
+        to {opacity: 1; transform: translateY(0);}
     }
-    .status-resolved { 
-        background: #d4edda; 
-        color: #155724; 
-        padding: 0.4rem 1rem; 
-        border-radius: 20px; 
-        font-weight: 500; 
-        font-size: 0.8rem;
-    }
-    .status-high { 
-        background: #f8d7da; 
-        color: #721c24; 
-        padding: 0.4rem 1rem; 
-        border-radius: 20px; 
-        font-weight: 500; 
-        font-size: 0.8rem;
-    }
-    .status-medium { 
-        background: #fff3cd; 
-        color: #856404; 
-        padding: 0.4rem 1rem; 
-        border-radius: 20px; 
-        font-weight: 500; 
-        font-size: 0.8rem;
-    }
-    .status-low { 
-        background: #d1ecf1; 
-        color: #0c5460; 
-        padding: 0.4rem 1rem; 
-        border-radius: 20px; 
-        font-weight: 500; 
-        font-size: 0.8rem;
-    }
-    
-    /* Hide Streamlit elements */
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    header {visibility: hidden;}
-    
-    /* Smooth transitions */
-    .element-container {
-        transition: all 0.3s ease;
+
+    @keyframes slideUp {
+        from {opacity: 0; transform: translateY(40px);}
+        to {opacity: 1; transform: translateY(0);}
     }
 </style>
 """, unsafe_allow_html=True)
