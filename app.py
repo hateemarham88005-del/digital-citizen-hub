@@ -27,9 +27,6 @@ else:
     ])
 
 # --- Modern Smooth CSS ---
-import streamlit as st
-
-# 👇 Add this part at the top (before any layout or UI)
 st.markdown("""
     <style>
         .main {
@@ -40,7 +37,7 @@ st.markdown("""
 
         .stButton button {
             background: linear-gradient(90deg, #2563eb, #1e40af);
-            color: #ffffff !important;  /* Make text visible */
+            color: #ffffff !important;
             border: none;
             border-radius: 8px;
             padding: 0.9rem 2rem;
@@ -52,12 +49,11 @@ st.markdown("""
 
         .stButton button:hover {
             background: linear-gradient(90deg, #1d4ed8, #1e3a8a);
-            color: #ffffff !important;  /* Keep text white */
+            color: #ffffff !important;
             transform: scale(1.05);
             box-shadow: 0 8px 30px rgba(37,99,235,0.4);
         }
 
-        /* Optional: Header animation & card styling (from previous code) */
         .main-header {
             font-size: 3rem;
             font-weight: 700;
@@ -67,13 +63,120 @@ st.markdown("""
             animation: fadeIn 1.5s ease-in;
         }
 
+        .sub-header {
+            font-size: 1.4rem;
+            color: #666666;
+            text-align: center;
+            margin-bottom: 3rem;
+            font-weight: 400;
+            line-height: 1.5;
+        }
+
+        .mission-text {
+            font-size: 1.1rem;
+            color: #444444;
+            text-align: center;
+            margin: 2rem 0;
+            line-height: 1.6;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .action-container {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .action-button {
+            background: #000000;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 1.2rem 2.5rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+            min-width: 200px;
+        }
+        
+        .action-button:hover {
+            background: #333333;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .section-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #000000;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .clean-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            border: 1px solid #f0f0f0;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .status-pending { 
+            background: #fff3cd; 
+            color: #856404; 
+            padding: 0.4rem 1rem; 
+            border-radius: 20px; 
+            font-weight: 500; 
+            font-size: 0.8rem;
+        }
+        .status-resolved { 
+            background: #d4edda; 
+            color: #155724; 
+            padding: 0.4rem 1rem; 
+            border-radius: 20px; 
+            font-weight: 500; 
+            font-size: 0.8rem;
+        }
+        .status-high { 
+            background: #f8d7da; 
+            color: #721c24; 
+            padding: 0.4rem 1rem; 
+            border-radius: 20px; 
+            font-weight: 500; 
+            font-size: 0.8rem;
+        }
+        .status-medium { 
+            background: #fff3cd; 
+            color: #856404; 
+            padding: 0.4rem 1rem; 
+            border-radius: 20px; 
+            font-weight: 500; 
+            font-size: 0.8rem;
+        }
+        .status-low { 
+            background: #d1ecf1; 
+            color: #0c5460; 
+            padding: 0.4rem 1rem; 
+            border-radius: 20px; 
+            font-weight: 500; 
+            font-size: 0.8rem;
+        }
+
         @keyframes fadeIn {
             from {opacity: 0; transform: translateY(20px);}
             to {opacity: 1; transform: translateY(0);}
         }
     </style>
 """, unsafe_allow_html=True)
-
 
 # --- Language Selector ---
 st.sidebar.markdown("---")
@@ -209,13 +312,14 @@ if page == text[lang]["home"]:
     st.markdown(f'<div class="sub-header">{text[lang]["subtitle"]}</div>', unsafe_allow_html=True)
     st.markdown(f'<div class="mission-text">{text[lang]["mission"]}</div>', unsafe_allow_html=True)
     
-    # Action Buttons
-    st.markdown("""
-    <div class="action-container">
-        <a href="?nav=Submit Complaint" class="action-button">Submit Complaint</a>
-        <a href="?nav=Track Complaint" class="action-button">Track Complaint</a>
-    </div>
-    """, unsafe_allow_html=True)
+    # Action Buttons - Fixed using Streamlit buttons instead of HTML links
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("Submit Complaint", use_container_width=True):
+            st.session_state.page = text[lang]["submit"]
+    with col2:
+        if st.button("Track Complaint", use_container_width=True):
+            st.session_state.page = text[lang]["track"]
     
     # Divider
     st.markdown("---")
@@ -275,16 +379,18 @@ elif page == text[lang]["submit"] and role == "Citizen":
 
         if submitted and name and description:
             tracking_id = int(pd.Timestamp.now().timestamp())
-          # Force all categories to English (consistent for visualization)
-if lang == "اردو":
-    translation_map = {
-        "بجلی": "Electricity", "پانی": "Water", "صحت": "Health",
-        "سڑکیں": "Roads", "صفائی": "Sanitation", "دیگر": "Other"
-    }
-    category_en = translation_map.get(category.strip(), "Other")
-else:
-    category_en = category.strip()
-dept = department_mapping.get(category_en, "Other")
+            
+            # Fixed category translation logic
+            if lang == "اردو":
+                translation_map = {
+                    "بجلی": "Electricity", "پانی": "Water", "صحت": "Health",
+                    "سڑکیں": "Roads", "صفائی": "Sanitation", "دیگر": "Other"
+                }
+                category_en = translation_map.get(category, "Other")
+            else:
+                category_en = category
+            
+            dept = department_mapping.get(category_en, "Other")
             priority = detect_priority(description)
             sentiment = get_sentiment(description)
             status = "Pending"
