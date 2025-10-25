@@ -275,11 +275,16 @@ elif page == text[lang]["submit"] and role == "Citizen":
 
         if submitted and name and description:
             tracking_id = int(pd.Timestamp.now().timestamp())
-            category_en = category if lang == "English" else {
-                "بجلی": "Electricity", "پانی": "Water", "صحت": "Health",
-                "سڑکیں": "Roads", "صفائی": "Sanitation", "دیگر": "Other"
-            }.get(category, "Other")
-            
+          # Force all categories to English (consistent for visualization)
+if lang == "اردو":
+    translation_map = {
+        "بجلی": "Electricity", "پانی": "Water", "صحت": "Health",
+        "سڑکیں": "Roads", "صفائی": "Sanitation", "دیگر": "Other"
+    }
+    category_en = translation_map.get(category.strip(), "Other")
+else:
+    category_en = category.strip()
+
             dept = department_mapping.get(category_en, "Other")
             priority = detect_priority(description)
             sentiment = get_sentiment(description)
