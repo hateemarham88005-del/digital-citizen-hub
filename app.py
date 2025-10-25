@@ -221,13 +221,114 @@ if role == "Administrator":
         st.stop()
 
 # --- Navigation ---
-st.sidebar.markdown("---")
-if role == "Citizen":
-    nav_options = [text[lang]["home"], text[lang]["submit"], text[lang]["track"], text[lang]["chatbot"]]
-else:
-    nav_options = [text[lang]["home"], text[lang]["dashboard"], text[lang]["chatbot"]]
+import { Link, useLocation } from "react-router-dom";
+import { Home, FileText, Search, LayoutDashboard, Bot, Globe } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
-page = st.sidebar.radio("Navigation", nav_options)
+interface NavigationProps {
+  role: "Citizen" | "Admin";
+}
+
+export const Navigation = ({ role }: NavigationProps) => {
+  const location = useLocation();
+  const { language, setLanguage, t } = useLanguage();
+
+  const citizenLinks = [
+    { path: "/", label: t("home"), icon: Home },
+    { path: "/submit", label: t("submit"), icon: FileText },
+    { path: "/track", label: t("track"), icon: Search },
+    { path: "/chatbot", label: t("chatbot"), icon: Bot },
+  ];
+
+  const adminLinks = [
+    { path: "/", label: t("home"), icon: Home },
+    { path: "/dashboard", label: t("dashboard"), icon: LayoutDashboard },
+    { path: "/chatbot", label: t("chatbot"), icon: Bot },
+  ];
+
+  const links = role === "Citizen" ? citizenLinks : adminLinks;
+
+  return (
+    <nav className="bg-card border-b shadow-card">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          <div className="flex items-center space-x-8">
+            <Link to="/" className="flex items-center space-x-2">
+              <div className="w-10 h-10 rounded-lg gradient-primary flex items-center justify-center">
+                <Globe className="w-6 h-6 text-primary-foreground" />
+              </div>
+              <span className="font-bold text-xl text-primary hidden md:block">
+                {language === "English" ? "DCH" : "ڈی سی ایچ"}
+              </span>
+            </Link>
+
+            <div className="hidden md:flex space-x-1">
+              {links.map((link) => {
+                const Icon = link.icon;
+                const isActive = location.pathname === link.path;
+                return (
+                  <Link key={link.path} to={link.path}>
+                    <Button
+                      variant={isActive ? "default" : "ghost"}
+                      size="sm"
+                      className="gap-2"
+                    >
+                      <Icon className="w-4 h-4" />
+                      {link.label}
+                    </Button>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2">
+            <Select
+              value={language}
+              onValueChange={(value) => setLanguage(value as "English" | "اردو")}
+            >
+              <SelectTrigger className="w-[140px]">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="English">🇬🇧 English</SelectItem>
+                <SelectItem value="اردو">🇵🇰 اردو</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </div>
+
+        {/* Mobile Navigation */}
+        <div className="md:hidden pb-3 flex gap-2 overflow-x-auto">
+          {links.map((link) => {
+            const Icon = link.icon;
+            const isActive = location.pathname === link.path;
+            return (
+              <Link key={link.path} to={link.path}>
+                <Button
+                  variant={isActive ? "default" : "ghost"}
+                  size="sm"
+                  className="gap-2 whitespace-nowrap"
+                >
+                  <Icon className="w-4 h-4" />
+                  {link.label}
+                </Button>
+              </Link>
+            );
+          })}
+        </div>
+      </div>
+    </nav>
+  );
+};
 
 # --- Helper Functions ---
 def detect_priority(text_input):
