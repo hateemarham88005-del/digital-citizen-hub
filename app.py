@@ -27,119 +27,53 @@ else:
     ])
 
 # --- Modern Smooth CSS ---
+import streamlit as st
+
+# 👇 Add this part at the top (before any layout or UI)
 st.markdown("""
-<style>
-    .main {
-        background: linear-gradient(135deg, #f4f7fb 0%, #e8eef6 100%);
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-        color: #1e293b;
-    }
+    <style>
+        .main {
+            background: linear-gradient(135deg, #f4f7fb 0%, #e8eef6 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #1e293b;
+        }
 
-    .main-header {
-        font-size: 3rem;
-        font-weight: 700;
-        color: #1e40af;
-        text-align: center;
-        margin-bottom: 1rem;
-        animation: fadeIn 1.5s ease-in;
-    }
+        .stButton button {
+            background: linear-gradient(90deg, #2563eb, #1e40af);
+            color: #ffffff !important;  /* Make text visible */
+            border: none;
+            border-radius: 8px;
+            padding: 0.9rem 2rem;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 6px 20px rgba(37,99,235,0.25);
+        }
 
-    .sub-header {
-        font-size: 1.3rem;
-        color: #475569;
-        text-align: center;
-        margin-bottom: 2rem;
-        animation: slideUp 1.2s ease-in;
-    }
+        .stButton button:hover {
+            background: linear-gradient(90deg, #1d4ed8, #1e3a8a);
+            color: #ffffff !important;  /* Keep text white */
+            transform: scale(1.05);
+            box-shadow: 0 8px 30px rgba(37,99,235,0.4);
+        }
 
-    .mission-text {
-        background: white;
-        border-left: 5px solid #3b82f6;
-        border-radius: 12px;
-        padding: 1.5rem;
-        text-align: center;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-        margin-bottom: 2rem;
-        font-size: 1rem;
-        line-height: 1.6;
-        animation: fadeIn 2s ease;
-    }
+        /* Optional: Header animation & card styling (from previous code) */
+        .main-header {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #1e40af;
+            text-align: center;
+            margin-bottom: 1rem;
+            animation: fadeIn 1.5s ease-in;
+        }
 
-    .action-container {
-        display: flex;
-        justify-content: center;
-        gap: 1.5rem;
-        margin: 3rem 0;
-    }
-
-    .action-button {
-        background: linear-gradient(90deg, #2563eb, #1e40af);
-        color: white;
-        border: none;
-        border-radius: 50px;
-        padding: 1rem 2rem;
-        font-weight: 600;
-        font-size: 1.1rem;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        box-shadow: 0 6px 20px rgba(37,99,235,0.25);
-    }
-
-    .action-button:hover {
-        transform: scale(1.05);
-        box-shadow: 0 8px 30px rgba(37,99,235,0.4);
-    }
-
-    .clean-card {
-        background: white;
-        border-radius: 15px;
-        padding: 2rem;
-        border: 1px solid #e2e8f0;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        transition: transform 0.2s ease;
-    }
-
-    .clean-card:hover {
-        transform: translateY(-4px);
-    }
-
-    .section-title {
-        font-size: 1.8rem;
-        font-weight: 600;
-        color: #1e40af;
-        text-align: center;
-        margin-bottom: 2rem;
-    }
-
-    .stButton button {
-        background: linear-gradient(90deg, #3b82f6, #1e40af);
-        color: white;
-        border: none;
-        border-radius: 8px;
-        padding: 0.9rem 2rem;
-        font-weight: 600;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-    }
-
-    .stButton button:hover {
-        background: linear-gradient(90deg, #2563eb, #1d4ed8);
-        transform: scale(1.03);
-        box-shadow: 0 6px 20px rgba(37,99,235,0.3);
-    }
-
-    /* Animations */
-    @keyframes fadeIn {
-        from {opacity: 0; transform: translateY(20px);}
-        to {opacity: 1; transform: translateY(0);}
-    }
-
-    @keyframes slideUp {
-        from {opacity: 0; transform: translateY(40px);}
-        to {opacity: 1; transform: translateY(0);}
-    }
-</style>
+        @keyframes fadeIn {
+            from {opacity: 0; transform: translateY(20px);}
+            to {opacity: 1; transform: translateY(0);}
+        }
+    </style>
 """, unsafe_allow_html=True)
+
 
 # --- Language Selector ---
 st.sidebar.markdown("---")
